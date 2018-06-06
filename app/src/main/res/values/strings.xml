@@ -2,5 +2,6 @@
     <string name="app_name">Wortschatz</string>
     <string name="action_settings">Settings</string>
     <string name="sort_date">Sort by date</string>
-    <string name="sort_AZ">Sort alphabetically</string>
+    <string name="sort_AZ_theme">Sort theme alphabetically</string>
+    <string name="sort_AZ_version">Sort version alphabetically</string>
 </resources>

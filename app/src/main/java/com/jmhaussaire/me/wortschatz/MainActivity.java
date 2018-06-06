@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
         //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         //fab.setOnClickListener(switch_panel);
@@ -44,27 +45,27 @@ public class MainActivity extends AppCompatActivity {
 
         List<HashMap<String, String>> liste = new ArrayList<HashMap<String, String>>();
 
-        word word_1 = new word("die Katze", "le chat");
-        HashMap<String, String> element1 = new HashMap<String, String>();
-        element1.put("theme", word_1.getTheme());
-        element1.put("version", word_1.getVersion());
-        liste.add(element1);
+        Word word_1 = new Noun("die Katze", "le chat");
+        try {
+            java.util.concurrent.TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //Noun word_2 = new Noun("die Katze", "le chat");
+        Word word_2 = new Noun("das Hund", "le chien");
+        try {
+            java.util.concurrent.TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Word word_3 = new Noun("das Ding", "le truc");
 
-        word_1 = new word("das Hund", "le chien");
-        element1 = new HashMap<String, String>();
-        element1.put("theme", word_1.getTheme());
-        element1.put("version", word_1.getVersion());
-        liste.add(element1);
-        liste.add(element1);
-        liste.add(element1);
-        liste.add(element1);
-        liste.add(element1);
-        liste.add(element1);
-        liste.add(element1);
-        liste.add(element1);
-        liste.add(element1);
-        liste.add(element1);
-        liste.add(element1);
+        Dictionary dic = new Dictionary("German","English");
+        dic.addWord(word_1);
+        dic.addWord(word_2);
+        dic.addWord(word_3);
+
+        dic.sortWordList("Date");
 
 //        word[] mon_test = new word[] {word_1, word_1, word_1, word_1};
 //        List<String> first = new ArrayList<>() ;
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 //            second.add(mon_test[i].getVersion());
 //        }
 
-        ListAdapter la = new SimpleAdapter(this, liste, R.layout.list_item , new String[]{"theme", "version"},
+        ListAdapter la = new SimpleAdapter(this, dic.getHashMap(), R.layout.list_item , new String[]{"theme", "version"},
                 new int[]{R.id.text1, R.id.text2});
 
 //        ArrayAdapter<String> aa1 = new ArrayAdapter<String>(this,R.layout.list_item,first);
@@ -115,5 +116,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void add_word(View view) {
+        Toast.makeText(this, "tout bon", Toast.LENGTH_SHORT).show();
     }
 }

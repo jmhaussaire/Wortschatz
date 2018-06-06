@@ -9,7 +9,10 @@
         app:showAsAction="never" />
     <item
         android:orderInCategory="100"
-        android:title="@string/sort_AZ"
+        android:title="@string/sort_AZ_theme"
         app:showAsAction="never" />
-
+    <item
+        android:orderInCategory="100"
+        android:title="@string/sort_AZ_version"
+        app:showAsAction="never" />
 </menu>
