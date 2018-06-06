@@ -2,6 +2,7 @@ package com.jmhaussaire.me.wortschatz;
 
 public class Noun extends Word {
     // Attribute
+    static String[] articles = new String[] {"der ", "die ", "das "};
     private int gender; // 1 masc; 0 neutral; -1 fem
     private String article; // der, die, das
     private String plural; //for the plural form
@@ -10,7 +11,7 @@ public class Noun extends Word {
         super(to_learn,meaning);
 
         String to_learn_word = to_learn;
-        String[] articles = new String[] {"der ", "die ", "das "};
+
 
         for (int i=0; i<3; i++) {
             if (to_learn_word.contains(articles[i])) {
@@ -19,7 +20,14 @@ public class Noun extends Word {
                 break;
             }
         }
-        this.theme = to_learn_word;
+        this.theme = capitalizeFirstLetter(to_learn_word);
+    }
+
+    public String capitalizeFirstLetter(String original) {
+        if (original == null || original.length() == 0) {
+            return original;
+        }
+        return original.substring(0, 1).toUpperCase() + original.substring(1);
     }
 
     @Override

@@ -57,6 +57,11 @@ public class Dictionary {
         sortWordList();
     }
 
+    public void removeWord(Word word){
+        this.word_list.remove(word);
+        sortWordList();
+    }
+
     public void sortWordList() {
         sortWordList(this.sorting_type);
     }
@@ -82,8 +87,8 @@ public class Dictionary {
         for (int i=0; i<this.word_list.size(); i++) {
             Word word = word_list.get(i);
             HashMap<String, String> element = new HashMap<String, String>();
-            element.put("theme", word.getTheme());
-            element.put("version", word.getVersion());
+            element.put("theme", word.printTheme());
+            element.put("version", word.printVersion());
             liste.add(element);
         }
 

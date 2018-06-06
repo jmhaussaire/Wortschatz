@@ -4,4 +4,15 @@
     <string name="sort_date">Sort by date</string>
     <string name="sort_AZ_theme">Sort theme alphabetically</string>
     <string name="sort_AZ_version">Sort version alphabetically</string>
+    <string name="noun">Noun</string>
+    <string name="verb">Verb</string>
+    <string name="other">Other</string>
+    <string name="idiom">Idiom</string>
+    <string name="masc">Masc.</string>
+    <string name="neut">Neut.</string>
+    <string name="fem">Fem.</string>
+    <string name="plural">Plural:</string>
+    <string name="preterit">Preterit</string>
+    <string name="adding">Add word</string>
+    <string name="perfekt">Perfekt</string>
 </resources>

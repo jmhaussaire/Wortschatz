@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/extra_noun"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/word_gender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:clickable="false"
+        >
+
+    <RadioButton
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/masc"
+        android:layout_weight="25"
+        />
+    <RadioButton
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/fem"
+        android:layout_weight="25"
+        />
+    <RadioButton
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/neut"
+        android:layout_weight="25"
+        />
+
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/plural"
+        />
+
+    <EditText
+        android:id="@+id/plural"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+</LinearLayout>

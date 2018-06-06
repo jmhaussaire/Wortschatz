@@ -1,18 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.jmhaussaire.me.wortschatz.MainActivity">
+    tools:context="com.jmhaussaire.me.wortschatz.MainActivity"
+    >
+
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/sortDate"
         android:orderInCategory="100"
         android:title="@string/sort_date"
-        app:showAsAction="never" />
-    <item
-        android:orderInCategory="100"
-        android:title="@string/sort_AZ_theme"
-        app:showAsAction="never" />
-    <item
-        android:orderInCategory="100"
-        android:title="@string/sort_AZ_version"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        />
+
 </menu>
