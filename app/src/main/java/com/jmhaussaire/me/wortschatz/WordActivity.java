@@ -3,23 +3,12 @@ package com.jmhaussaire.me.wortschatz;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.Layout;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
-import java.io.Serializable;
-
-public class MainActivity extends AppCompatActivity {
+public class WordActivity extends AppCompatActivity {
     TextView theme_language;
     TextView version_language;
     EditText theme_word;

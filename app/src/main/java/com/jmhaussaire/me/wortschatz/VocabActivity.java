@@ -1,6 +1,8 @@
 package com.jmhaussaire.me.wortschatz;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -26,7 +28,8 @@ public class VocabActivity extends AppCompatActivity {
     Dictionary dic;
     ListAdapter la;
 
-
+    public final static int ADD_WORD_REQUEST = 0;
+    public final static String WORD_TO_ADD = "android.intent.action.WORD_TO_ADD";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,18 +51,7 @@ public class VocabActivity extends AppCompatActivity {
         theme_list = findViewById(R.id.theme_list);
 
         Word word_1 = new Noun("die Katze", "chat");
-        try {
-            java.util.concurrent.TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        Word word_2 = new Noun("das Hund", "chien");
-        try {
-            java.util.concurrent.TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Word word_2 = new Noun("der Hund", "chien");
         Word word_3 = new Noun("das Ding", "truc");
 
         this.dic = new Dictionary("German","English");
@@ -67,14 +59,19 @@ public class VocabActivity extends AppCompatActivity {
         dic.addWord(word_2);
         dic.addWord(word_3);
 
-        getSupportActionBar().setTitle(dic.getLearning_language());
+        getSupportActionBar().setTitle(dic.getName());
 
+//        la = new SimpleAdapter(this, dic.getHashMap(), R.layout.list_item , new String[]{"theme", "version"},
+//                new int[]{R.id.text1, R.id.text2});
+//
+//        theme_list.setAdapter(la);
+        displayList();
+    }
 
-
+    public void displayList(){
         la = new SimpleAdapter(this, dic.getHashMap(), R.layout.list_item , new String[]{"theme", "version"},
                 new int[]{R.id.text1, R.id.text2});
-
-        theme_list.setAdapter(la);
+        this.theme_list.setAdapter(la);
     }
 
     @Override
@@ -102,17 +99,33 @@ public class VocabActivity extends AppCompatActivity {
         if (id == R.id.sortVersion)
             dic.sortWordListVersion();
 
-        la = new SimpleAdapter(this, dic.getHashMap(), R.layout.list_item , new String[]{"theme", "version"},
-                new int[]{R.id.text1, R.id.text2});
-        theme_list.setAdapter(la);
+//        la = new SimpleAdapter(this, dic.getHashMap(), R.layout.list_item , new String[]{"theme", "version"},
+//                new int[]{R.id.text1, R.id.text2});
+//        theme_list.setAdapter(la);
+        displayList();
         return true;
 
         //return super.onOptionsItemSelected(item);
     }
 
     public void add_word(View view) {
-        Toast.makeText(this, "tout bon", Toast.LENGTH_SHORT).show();
+        Intent wordActivity = new Intent(VocabActivity.this, MainActivity.class);
+
+        startActivityForResult(wordActivity,ADD_WORD_REQUEST);
+        //Toast.makeText(this, "tout bon", Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode== ADD_WORD_REQUEST) {
+            if (resultCode==RESULT_OK){
+                Word word =data.getParcelableExtra("this is the word");
+                dic.addWord(word);
+                displayList();
+            }
+        }
+    }
+
 
 
 }

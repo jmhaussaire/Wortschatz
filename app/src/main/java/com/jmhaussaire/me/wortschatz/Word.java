@@ -1,9 +1,13 @@
 package com.jmhaussaire.me.wortschatz;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Comparator;
 import java.util.Date;
 
-public class Word {
+public class Word implements Parcelable {
+
     //Attributes
     protected String theme; //German
     protected String version; //English
@@ -19,14 +23,39 @@ public class Word {
 
     // pluriel, link with verb, adj ..., pret and perfect,
 
+
+
+    // Needed to make it parcelable
+    public static final Parcelable.Creator<Word> CREATOR = new Parcelable.Creator<Word>() {
+        @Override
+        public Word createFromParcel(Parcel source) {
+            return new Word(source);
+        }
+        @Override
+        public Word[] newArray(int size) {
+            return new Word[size];
+        }
+    };
+
+
+
+    // Constructor
     public Word(String to_learn, String meaning){
         this.theme = to_learn;
         this.version = meaning;
         this.entry_date = new Date();
     }
 
+    // Constructor from Parcel
+    public Word(Parcel in){
+        this.theme = in.readString();
+        this.version = in.readString();
+        this.entry_date = new Date();
+    }
 
-    // Methods
+
+
+    // Getters/Setters
     public String getTheme() {
         return this.theme;
     }
@@ -45,5 +74,18 @@ public class Word {
 
     public Date getEntry_date() {
         return entry_date;
+    }
+
+
+    // Methods for Parcelable
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(theme);
+        dest.writeString(version);
     }
 }

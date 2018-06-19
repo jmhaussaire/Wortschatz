@@ -62,6 +62,23 @@ public class Dictionary {
         sortWordList();
     }
 
+
+
+    public List<HashMap<String, String>> getHashMap() {
+        System.out.println("truc");
+        List<HashMap<String, String>> liste = new ArrayList<HashMap<String, String>>();
+
+        for (int i=0; i<this.word_list.size(); i++) {
+            Word word = word_list.get(i);
+            HashMap<String, String> element = new HashMap<String, String>();
+            element.put("theme", word.printTheme());
+            element.put("version", word.printVersion());
+            liste.add(element);
+        }
+
+        return liste;
+    }
+
     public void sortWordList() {
         sortWordList(this.sorting_type);
     }
@@ -78,21 +95,6 @@ public class Dictionary {
                 sortWordListVersion();
                 break;
         }
-    }
-
-    public List<HashMap<String, String>> getHashMap() {
-        System.out.println("truc");
-        List<HashMap<String, String>> liste = new ArrayList<HashMap<String, String>>();
-
-        for (int i=0; i<this.word_list.size(); i++) {
-            Word word = word_list.get(i);
-            HashMap<String, String> element = new HashMap<String, String>();
-            element.put("theme", word.printTheme());
-            element.put("version", word.printVersion());
-            liste.add(element);
-        }
-
-        return liste;
     }
 
     public void sortWordListTheme() {
