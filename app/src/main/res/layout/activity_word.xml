@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:theme="@style/AppTheme.WordText"
+            android:id="@+id/theme_language"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:gravity="center_horizontal"
+            />
+
+        <TextView
+            android:theme="@style/AppTheme.WordText"
+            android:id="@+id/version_language"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:gravity="center_horizontal"
+            />
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <EditText
+            android:id="@+id/theme_word"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <EditText
+            android:id="@+id/version_word"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:layout_gravity="center_horizontal"
+             />
+    </LinearLayout>
+
+      <RadioGroup
+          android:id="@+id/word_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:checkedButton="@id/noun_button"
+          >
+
+        <RadioButton
+            android:id="@+id/noun_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/noun"
+            android:layout_weight="25"
+            />
+        <RadioButton
+            android:id="@+id/verb_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/verb"
+            android:layout_weight="25"
+            />
+        <RadioButton
+            android:id="@+id/other_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/other"
+            android:layout_weight="25"
+            />
+        <RadioButton
+            android:id="@+id/idiom_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/idiom"
+            android:layout_weight="25"
+            />
+    </RadioGroup>
+
+
+    <include layout="@layout/noun" />
+
+    <include layout="@layout/verb"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:onClick="pushWord"
+        android:text="@string/adding"
+        android:theme="@style/AppTheme.Buttons" />
+
+
+</LinearLayout>

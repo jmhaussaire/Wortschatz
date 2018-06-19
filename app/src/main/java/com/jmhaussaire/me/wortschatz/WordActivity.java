@@ -23,7 +23,7 @@ public class WordActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_word);
 
         this.dic = new Dictionary("German","English");
 
