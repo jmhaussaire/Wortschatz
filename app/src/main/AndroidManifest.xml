@@ -28,6 +28,12 @@
         <activity
             android:name=".WordActivity">
         </activity>
+        <activity
+            android:name=".MainTestActivity">
+        </activity>
+        <activity
+            android:name=".TestActivity">
+        </activity>
 
     </application>
 

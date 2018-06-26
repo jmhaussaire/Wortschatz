@@ -1,8 +1,13 @@
 package com.jmhaussaire.me.wortschatz;
 
+import android.icu.util.DateInterval;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.time.Duration;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -11,15 +16,16 @@ public class Word implements Parcelable {
     //Attributes
     protected String theme; //German
     protected String version; //English
+    private Date entry_date; // date the word was added. For sorting.
     // private String word_type; // verb, noun, adj, adv, idiom
 
-    private int n_tests =0; // total number of tests
-    private int n_failed_tests =0;
-    private int n_success_tests =0;
-    private int n_middle_tests=0; // in case I have a middle test
-    private int last_test_result=0; // good=1; middle=0; bad=-1;
-    private Date entry_date; // date the word was added. For sorting.
-    private Date last_test_date; // Date of the last test. For randomizing.
+    private ArrayList<Integer> test_results_theme;
+    private ArrayList<Integer> test_results_version;
+    private Date last_test_date_version; // Date of the last test. For randomizing.
+    private Date last_test_date_theme; // Date of the last test. For randomizing.
+
+    private double weight_version=1; //Knowing the former attributes, the corresponsing weight
+    private double weight_theme=1; //Knowing the former attributes, the corresponsing weight
 
     // pluriel, link with verb, adj ..., pret and perfect,
 
@@ -44,6 +50,10 @@ public class Word implements Parcelable {
         this.theme = to_learn;
         this.version = meaning;
         this.entry_date = new Date();
+        this.last_test_date_theme = new Date(0); // 1970-01-01
+        this.last_test_date_version = new Date(0);// 1970-01-01
+        this.test_results_theme = new ArrayList<Integer>();
+        this.test_results_version = new ArrayList<Integer>();
     }
 
     // Constructor from Parcel
@@ -51,6 +61,8 @@ public class Word implements Parcelable {
         this.theme = in.readString();
         this.version = in.readString();
         this.entry_date = new Date();
+        this.last_test_date_theme = new Date(0); // 1970-01-01
+        this.last_test_date_version = new Date(0);// 1970-01-01
     }
 
 
@@ -59,25 +71,97 @@ public class Word implements Parcelable {
     public String getTheme() {
         return this.theme;
     }
-
     public String printTheme(){
         return this.theme;
     }
-
     public String getVersion() {
         return this.version;
     }
-
     public String printVersion() {
         return this.version;
     }
-
     public Date getEntry_date() {
         return entry_date;
     }
+    public Date getLast_test_date_version() {
+        return last_test_date_version;
+    }
+    public Date getLast_test_date_theme() { return last_test_date_theme;  }
+    public Date getLast_test_date(String type){
+        if (type == "theme"){
+            return getLast_test_date_theme();
+        }
+        else if (type == "version"){
+            return getLast_test_date_version();
+        }
+        else {
+            System.out.println("Not the right type");
+            return new Date(0);
+        }
+    }
+    public void setLast_test_date(Date date, String type){
+        if (type == "theme"){
+            this.last_test_date_theme = date;
+        }
+        else if (type == "version"){
+            this.last_test_date_version = date;
+        }
+        else {
+            System.out.println("Not the right type");
+        }
+    }
+    public double getWeight_version() {
+        updateWeightVersion();
+        return this.weight_version;
+    }
+    public double getWeight_theme() {
+        updateWeightTheme();
+        return this.weight_theme;
+    }
+    public double getWeight(String type) {
+        if (type == "theme"){
+            return getWeight_theme();
+        }
+        else if (type == "version"){
+            return getWeight_version();
+        }
+        else {
+            System.out.println("Not the right type");
+            return 0;
+        }
+    }
+    public ArrayList<Integer> getTest_results_theme() {
+        return test_results_theme;
+    }
+    public ArrayList<Integer> getTest_results_version() {
+        return test_results_version;
+    }
+    public ArrayList<Integer> getTest_results(String type) {
+        if (type == "theme"){
+            return getTest_results_theme();
+        }
+        else if (type == "version"){
+            return getTest_results_version();
+        }
+        else {
+            System.out.println("Not the right type");
+            return new ArrayList<>();
+        }
+    }
+    public void appendTest_results(int result, String type){
+        if (type == "theme"){
+            this.test_results_theme.add(result);
+        }
+        else if (type == "version"){
+            this.test_results_version.add(result);
+        }
+        else {
+            System.out.println("Not the right type");
+            return;
+        }
+    }
 
-
-    // Methods for Parcelable
+        // Methods for Parcelable
     @Override
     public int describeContents() {
         return 0;
@@ -87,5 +171,57 @@ public class Word implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(theme);
         dest.writeString(version);
+    }
+
+
+
+    private void updateWeightTheme() {
+        double new_weight = computeWeight(test_results_theme, this.last_test_date_theme);
+        this.weight_theme = new_weight;
+    }
+
+    private void updateWeightVersion() {
+        double new_weight = computeWeight(this.test_results_version, this.last_test_date_version);
+        this.weight_version = new_weight;
+    }
+
+    // Returns a weight between 0 and 1. The bigger the weight, the more likely the word is to be picked.
+    private double computeWeight(ArrayList<Integer> test_results, Date last_test_date) {
+        double weight=0;
+        int test_size=test_results.size();
+        if (test_size==0)
+            weight=1;
+        else if (test_results.get(test_size-1)==-1)
+            weight=1;
+        else {
+            // If I got it right a lot in a row, I don't need it anymore
+            int good_in_row = 1;
+            boolean until=true;
+            while (until) {
+                good_in_row += test_results.get(test_size-good_in_row);
+                until = good_in_row>0;
+            }
+            double weight_1 = 1/good_in_row;
+
+            Date today = new Date();
+            Calendar cal = Calendar.getInstance();
+
+            // If it's old, I don't need it anymore ?
+//            cal.setTime(entry_date);
+//            cal.add(Calendar.DATE,45);
+//            Date twoWeeks = cal.getTime();
+
+            // If I haven't tested it in a while, I should check it again.
+            int mult=1;
+            for (int k=1;k<10; k++)
+            {
+                cal.setTime(last_test_date);
+                cal.add(Calendar.DATE,k*15+30);
+                Date later = cal.getTime();
+                if (today.after(later)) mult += 1;
+            }
+            weight = Math.min(Math.max(weight*mult,0.1),1);
+        }
+        return weight;
     }
 }

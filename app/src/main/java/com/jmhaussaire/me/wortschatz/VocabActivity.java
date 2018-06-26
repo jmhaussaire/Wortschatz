@@ -110,9 +110,7 @@ public class VocabActivity extends AppCompatActivity {
 
     public void add_word(View view) {
         Intent wordActivity = new Intent(VocabActivity.this, WordActivity.class);
-
         startActivityForResult(wordActivity,ADD_WORD_REQUEST);
-        //Toast.makeText(this, "tout bon", Toast.LENGTH_SHORT).show();
     }
 
     @Override

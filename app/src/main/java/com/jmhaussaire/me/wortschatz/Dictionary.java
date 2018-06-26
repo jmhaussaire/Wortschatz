@@ -14,7 +14,7 @@ import java.util.Locale;
 
 public class Dictionary {
     // Attributes
-    ArrayList<Word> word_list;
+    private ArrayList<Word> word_list;
 
     private String learning_language;
     private String known_language;
@@ -143,4 +143,54 @@ public class Dictionary {
         Collections.sort(this.word_list,test);
         sorting_type = "Date";
     }
+
+    public ArrayList<Word> sortWordListOrder(final String test_type) {
+        // I want to order
+        // - First last_result = False
+        // - First the ones that were tested the longest ago (no test is the oldest)
+        // - First the ones that were entered the soonest
+        Comparator<Word> test = new Comparator<Word>() {
+            @Override
+            public int compare(Word w1, Word w2) {
+                Date testDate1;
+                Date testDate2;
+                Date entryDate1;
+                Date entryDate2;
+
+                int testResult1 = -1;
+                if (!w1.getTest_results(test_type).isEmpty()){
+                    testResult1=w1.getTest_results(test_type).get(w1.getTest_results(test_type).size());
+                }
+                int testResult2 = -1;
+                if (!w2.getTest_results(test_type).isEmpty()) {
+                    testResult2 = w2.getTest_results(test_type).get(w2.getTest_results(test_type).size());
+                }
+
+
+                testDate1= w1.getLast_test_date(test_type);
+                testDate2 = w2.getLast_test_date(test_type);
+                entryDate1 = w1.getEntry_date();
+                entryDate2 = w2.getEntry_date();
+
+
+                if (testResult1==testResult2){
+                    if (testDate1.equals(testDate2))
+                        return entryDate2.compareTo(entryDate1);
+                    else
+                        return testDate1.compareTo(testDate2);
+                }
+                else {
+                    if (testResult1<testResult2)
+                        return -1;
+                    else
+                        return 1;
+                }
+            }
+        };
+
+        Collections.sort(this.word_list,test);
+        return this.word_list;
+        //sorting_type = "Order";
+    }
+
 }

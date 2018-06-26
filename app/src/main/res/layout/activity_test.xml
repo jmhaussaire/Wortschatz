@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="TextView" />
+
+    <Button
+        android:id="@+id/showanswer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="reveal"
+        android:text="Show answerr" />
+
+    <TextView
+        android:id="@+id/answer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="TextView"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:id="@+id/result"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/true_answer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:onClick="sendAnswer"
+            app:backgroundTint="@android:color/holo_green_light"
+            app:srcCompat="@android:drawable/checkbox_on_background" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/middle_answer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:onClick="sendAnswer"
+            app:backgroundTint="@android:color/holo_orange_light"
+            app:srcCompat="@android:drawable/ic_dialog_alert" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/false_answer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:onClick="sendAnswer"
+            app:backgroundTint="@android:color/holo_red_dark"
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
+    </LinearLayout>
+
+</LinearLayout>

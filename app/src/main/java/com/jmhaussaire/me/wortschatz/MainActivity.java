@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(vocabActivity);
                 break;
             case R.id.goToTest:
-                Toast.makeText(this, "Not ready yet", Toast.LENGTH_SHORT).show();
-//                Intent testActivity = new Intent(MainActivity.this, TestActivity.class);
-//                startActivity(testActivity);
+                //Toast.makeText(this, "Not ready yet", Toast.LENGTH_SHORT).show();
+                Intent testActivity = new Intent(MainActivity.this, MainTestActivity.class);
+                startActivity(testActivity);
                 break;
         }
     }

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/continueTest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:onClick="goToTest"
+        android:text="Continue previous test"
+        android:theme="@style/AppTheme.Buttons" />
+
+    <Button
+        android:id="@+id/startNewTest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:onClick="goToTest"
+        android:text="Start a new test"
+        android:theme="@style/AppTheme.Buttons" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioGroup
+            android:id="@+id/test_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <RadioButton
+                android:id="@+id/version_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/version" />
+
+            <RadioButton
+                android:id="@+id/theme_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/theme" />
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/test_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1">
+
+            <RadioButton
+                android:id="@+id/ordered"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Sort by order" />
+
+            <RadioButton
+                android:id="@+id/date_newest"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Sort by date (LIFO)" />
+
+            <RadioButton
+                android:id="@+id/date_oldest"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Sort by date (FIFO)" />
+
+            <RadioButton
+                android:id="@+id/random_smart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Sort by random (smart)" />
+
+            <RadioButton
+                android:id="@+id/random_pure"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Sort by random (pure)" />
+
+
+        </RadioGroup>
+    </LinearLayout>
+</LinearLayout>

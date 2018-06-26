@@ -17,7 +17,6 @@ public class WordActivity extends AppCompatActivity {
     RadioGroup word_type;
     RadioGroup gender;
 
-
     Dictionary dic;
 
     @Override

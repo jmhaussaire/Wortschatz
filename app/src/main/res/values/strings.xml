@@ -15,4 +15,6 @@
     <string name="preterit">Preterit</string>
     <string name="adding">Add word</string>
     <string name="perfekt">Perfekt</string>
+    <string name="version">Version</string>
+    <string name="theme">Theme</string>
 </resources>
