@@ -15,7 +15,6 @@ import java.util.Random;
 public class TestActivity extends AppCompatActivity {
     Dictionary dic;
     String test_type; //version or theme
-    String sort_type; //LIFO; FIFO; random; order ...
     Word current_word; //probably needed for saving ?
 
     @Override
@@ -23,10 +22,11 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
+        Intent intent = getIntent(); //?
+        this.current_word = intent.getParcelableExtra("word to test");
+        this.test_type = intent.getStringExtra("test type");
         /////////////////////
         // For example
-        Word word_1 = new Noun("die Katze", "chat");
-        current_word = word_1;
         this.test_type="theme";
         /////////////////////
 

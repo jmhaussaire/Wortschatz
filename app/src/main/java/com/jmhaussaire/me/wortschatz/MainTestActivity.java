@@ -7,7 +7,13 @@ import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class MainTestActivity extends AppCompatActivity {
+
+    public final static int TEST_WORD_REQUEST = 0;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +78,19 @@ public class MainTestActivity extends AppCompatActivity {
         //sort_type : LIFO; FIFO; random; order ...
 
         // I have a dictionary.
+        //////////////////////
+        // Example
+        /////////////////
+        Word word_1 = new Noun("die Katze", "chat");
+        Word word_2 = new Noun("der Hund", "chien");
+        Word word_3 = new Noun("das Ding", "truc");
+
+        Dictionary dic = new Dictionary("German","English");
+        dic.addWord(word_1);
+        dic.addWord(word_2);
+        dic.addWord(word_3);
+        //////////////////////////////////
+
 
         // I Sort the dictionary
         // I get the list of words
@@ -79,9 +98,26 @@ public class MainTestActivity extends AppCompatActivity {
         // for each, I launch the testactivity with the word and results
         // When I get the result, I update the word ?
 
-
-        Intent testActivity = new Intent(MainTestActivity.this, TestActivity.class);
-        startActivity(testActivity);
-
+        dic.sortWordList(sort_type,test_type);
+        ArrayList<Word> word_list = dic.getWord_list();
+        for (int i=0; i<word_list.size(); i++) {
+            Word word = word_list.get(i);
+            Intent testActivity = new Intent(MainTestActivity.this, TestActivity.class);
+            testActivity.putExtra("word to test",word);
+            testActivity.putExtra("test type",test_type);
+            startActivity(testActivity);
+            //startActivityForResult(testActivity,TEST_WORD_REQUEST);
+        }
     }
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode== TEST_WORD_REQUEST) {
+//            if (resultCode==RESULT_OK){
+//                Word word =data.getParcelableExtra("word tested");
+//                int test_result = data.getParcelableExtra("result");
+//            }
+//        }
+//    }
+
 }

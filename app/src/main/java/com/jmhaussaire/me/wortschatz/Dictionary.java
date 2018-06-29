@@ -20,7 +20,7 @@ public class Dictionary {
     private String known_language;
     private String name;
 
-    private String sorting_type; //AZ_theme, AZ_version, Date
+    private String display_sort; //AZ_theme, AZ_version, Date
 
     // Constructor
     public Dictionary(String to_learn, String known)
@@ -28,7 +28,7 @@ public class Dictionary {
         this.learning_language = to_learn;
         this.known_language = known;
         this.name = learning_language;
-        this.sorting_type = "AZ_theme";
+        this.display_sort = "AZ_theme";
 
         word_list = new ArrayList<Word>();
 
@@ -62,8 +62,6 @@ public class Dictionary {
         sortWordList();
     }
 
-
-
     public List<HashMap<String, String>> getHashMap() {
         System.out.println("truc");
         List<HashMap<String, String>> liste = new ArrayList<HashMap<String, String>>();
@@ -79,12 +77,28 @@ public class Dictionary {
         return liste;
     }
 
+    // All the sorting methods.
+    // sorting_type = Date, alpha, order, randoms,
+    // test_type = version vs theme
+    // Date (FIFO/LIFO) - for testing and display
+    // Version (AZ) - for display
+    // Theme (AZ) - for display
+    // Order - for testing
+    // Random pure - for testing
+    // Random smart - for testing
     public void sortWordList() {
-        sortWordList(this.sorting_type);
+        sortWordList(this.display_sort);
     }
 
-    public void sortWordList(String type) {
-        switch (type){
+    public void sortWordList(String sorting_type, String test_type){
+        if (sorting_type=="order")
+            sortWordListOrder(test_type);
+        else
+            sortWordList(sorting_type);
+    }
+
+    public void sortWordList(String sorting_type) {
+        switch (sorting_type){
             case "Date":
                 sortWordListDate();
                 break;
@@ -127,23 +141,29 @@ public class Dictionary {
         sorting_type = "AZ_version";
     }
 
-    public void sortWordListDate() {
+    public void sortWordListDate(String sorting_type) {
 
         Comparator<Word> test = new Comparator<Word>() {
             @Override
             public int compare(Word w1, Word w2) {
-                System.out.println("here");
-                System.out.println(w1.getEntry_date());
-                System.out.println(w2.getEntry_date());
-                System.out.println(w1.getEntry_date().compareTo(w2.getEntry_date()));
+//                System.out.println("here");
+//                System.out.println(w1.getEntry_date());
+//                System.out.println(w2.getEntry_date());
+//                System.out.println(w1.getEntry_date().compareTo(w2.getEntry_date()));
                 return w1.getEntry_date().compareTo(w2.getEntry_date());
             }
         };
 
-        Collections.sort(this.word_list,test);
-        sorting_type = "Date";
+        if (sorting_type=="FIFO")
+            Collections.sort(this.word_list,test);
+        else if (sorting_type=="LIFO")
+            Collections.sort(this.word_list,Collections.reverseOrder(test));
+        else if (sorting_type=="Date")
+            this.sorting_type = "Date";
     }
 
+
+    // CHECK WHAT FINAL MEANS !
     public ArrayList<Word> sortWordListOrder(final String test_type) {
         // I want to order
         // - First last_result = False
