@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class WordActivity extends AppCompatActivity {
     TextView theme_language;
@@ -36,6 +38,7 @@ public class WordActivity extends AppCompatActivity {
         theme_word = findViewById(R.id.theme_word);
         version_word = findViewById(R.id.version_word);
 
+        // Define the listener for when I change the word type
         RadioGroup.OnCheckedChangeListener type_listener = new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -65,14 +68,49 @@ public class WordActivity extends AppCompatActivity {
                         verb.setVisibility(View.VISIBLE);
                         break;
                 }
-
             }
         };
 
         word_type.setOnCheckedChangeListener(type_listener);
 
-        word_type.check(R.id.verb_button);
 
+        // Check how I started this activity
+        Intent intent = getIntent();
+        Word word = intent.getParcelableExtra("word to display");
+        // Either Im creating a new word
+        if (word==null){
+            word_type.check(R.id.verb_button);
+        }
+        else { // Or Im looking/updating an old one
+            Button delete = findViewById(R.id.delete_button);
+            delete.setVisibility(View.VISIBLE);
+            Button add = findViewById(R.id.add_button);
+            add.setText("Update Word");
+
+            theme_word.setText(word.printTheme());
+            version_word.setText(word.printVersion());
+            switch (word.getword_type()) {
+                case "Noun":
+                    word_type.check(R.id.noun_button);
+//                    Noun noun = (Noun) word;
+//                    //display_word(word); // To show all the extra information
+//                    theme_word.setText(noun.printTheme());
+//                    version_word.setText(noun.printVersion());
+                    break;
+                    case "Verb":
+                    word_type.check(R.id.verb_button);
+                    break;
+                    case "Idiom":
+                    word_type.check(R.id.idiom_button);
+                    break;
+                    default:
+                        word_type.check(R.id.other_button);
+            }
+
+        }
+
+
+        // If it's a noun, need to adapt the gender with the article
         RadioGroup.OnCheckedChangeListener gender_listener = new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -111,7 +149,7 @@ public class WordActivity extends AppCompatActivity {
             //case other
             //case idiom
             default:
-                to_add = new Word(theme,version);
+                to_add = new Word(theme,version,"Verb");
         }
 
         Intent result = new Intent();
@@ -119,4 +157,9 @@ public class WordActivity extends AppCompatActivity {
         setResult(RESULT_OK, result);
         finish();
     }
+
+    public void deleteWord(View view) {
+        // Need to make this
+    }
+
 }
