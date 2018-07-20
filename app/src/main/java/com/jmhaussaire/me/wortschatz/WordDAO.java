@@ -10,22 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Dao
-public interface DictionaryDAO {
+public interface WordDAO {
     @Insert
-    public void insert(Dictionary... dic);
+    public void insert(Word... word);
 
     @Update
-    public void update(Dictionary... dic);
+    public void update(Word... word);
 
     @Delete
-    public void delete(Dictionary dic);
+    public void delete(Word... word);
 
-    @Query("SELECT * FROM Dictionary")
-    public ArrayList<Dictionary> getDics();
+    @Query("SELECT * FROM Word")
+    public ArrayList<Word> getWords();
 
-    @Query("SELECT * FROM Dictionary WHERE name = :name")
-    public Dictionary getDicWithId(String name);
-
-
-
+    @Query("SELECT * FROM Word WHERE word_id = :id")
+    public Dictionary getWordWithId(String id);
 }

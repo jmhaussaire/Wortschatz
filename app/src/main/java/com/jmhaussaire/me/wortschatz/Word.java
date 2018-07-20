@@ -1,5 +1,7 @@
 package com.jmhaussaire.me.wortschatz;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverter;
 import android.icu.util.DateInterval;
 import android.os.Parcel;
@@ -12,9 +14,13 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 
-
+@Entity
 public class Word implements Parcelable {
+    public static int WORD_COUNT =0; // Count instances to set the id
+
     //Attributes
+    @PrimaryKey
+    protected int word_id; // Could be useful
     protected String theme; //German
     protected String version; //English
     private Date entry_date; // date the word was added. For sorting.
@@ -57,6 +63,8 @@ public class Word implements Parcelable {
 
     // Constructor
     public Word(String to_learn, String meaning, String word_type){
+        this.word_id = WORD_COUNT;
+        WORD_COUNT++;
         this.theme = to_learn;
         this.version = meaning;
         this.word_type = word_type;
