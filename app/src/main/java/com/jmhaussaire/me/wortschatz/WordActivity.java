@@ -98,11 +98,11 @@ public class WordActivity extends AppCompatActivity {
 //                    version_word.setText(noun.printVersion());
                     break;
                     case "Verb":
-                    word_type.check(R.id.verb_button);
-                    break;
+                        word_type.check(R.id.verb_button);
+                        break;
                     case "Idiom":
-                    word_type.check(R.id.idiom_button);
-                    break;
+                        word_type.check(R.id.idiom_button);
+                        break;
                     default:
                         word_type.check(R.id.other_button);
             }

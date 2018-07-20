@@ -79,13 +79,15 @@
                 android:id="@+id/random_smart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Sort by random (smart)" />
+                android:text="Sort by random (smart)"
+                android:visibility="invisible" />
 
             <RadioButton
                 android:id="@+id/random_pure"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Sort by random (pure)" />
+                android:text="Sort by random (pure)"
+                android:visibility="invisible" />
 
 
         </RadioGroup>

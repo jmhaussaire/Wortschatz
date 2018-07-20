@@ -7,17 +7,25 @@ import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MainTestActivity extends AppCompatActivity {
+    public final static int CONTINUE_TEST_REQUEST = 1;
+    public final static int TEST_WORD_REQUEST = 2;
 
-    public final static int TEST_WORD_REQUEST = 0;
 
+    protected ArrayList<Word> word_list;
+    protected int index;
+    protected String test_type;
+
+    //public
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_test);
+        this.index = 0;
     }
 
 
@@ -25,15 +33,24 @@ public class MainTestActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         // Must save the data
+        //File f = getFilesDir();
+
     }
 
 
     public void goToTest(View view) {
         switch (view.getId()) {
             case R.id.continueTest:
-                Toast.makeText(this, "Not ready yet", Toast.LENGTH_SHORT).show();
-//                Intent vocabActivity = new Intent(MainTestActivity.this, VocabActivity.class);
-//                startActivity(vocabActivity);
+                if (index==0)
+                    Toast.makeText(this, "No test to continue", Toast.LENGTH_SHORT).show();
+                else {
+                    Intent testActivity = new Intent(MainTestActivity.this, TestActivity.class);
+                    testActivity.putExtra("word list",word_list);
+                    testActivity.putExtra("test type",test_type);
+                    testActivity.putExtra("index",index);
+                    startActivityForResult(testActivity,CONTINUE_TEST_REQUEST);
+
+                }
                 break;
             case R.id.startNewTest:
                 // Need to get the value of the radio buttons to know what kind of test I am running.
@@ -91,7 +108,6 @@ public class MainTestActivity extends AppCompatActivity {
         dic.addWord(word_3);
         //////////////////////////////////
 
-
         // I Sort the dictionary
         // I get the list of words
         // I iterate over them
@@ -100,24 +116,47 @@ public class MainTestActivity extends AppCompatActivity {
 
         dic.sortWordList(sort_type,test_type);
         ArrayList<Word> word_list = dic.getWord_list();
+
+/*
         for (int i=0; i<word_list.size(); i++) {
             Word word = word_list.get(i);
             Intent testActivity = new Intent(MainTestActivity.this, TestActivity.class);
             testActivity.putExtra("word to test",word);
             testActivity.putExtra("test type",test_type);
-            startActivity(testActivity);
-            //startActivityForResult(testActivity,TEST_WORD_REQUEST);
+            //startActivity(testActivity);
+            startActivityForResult(testActivity,TEST_WORD_REQUEST);
+
         }
+*/
+        Intent testActivity = new Intent(MainTestActivity.this, TestActivity.class);
+        testActivity.putExtra("word list",word_list);
+        testActivity.putExtra("test type",test_type);
+        testActivity.putExtra("index",this.index);
+        startActivityForResult(testActivity,TEST_WORD_REQUEST);
+
+
+
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode== TEST_WORD_REQUEST) {
-//            if (resultCode==RESULT_OK){
-//                Word word =data.getParcelableExtra("word tested");
-//                int test_result = data.getParcelableExtra("result");
-//            }
-//        }
-//    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if ((requestCode== TEST_WORD_REQUEST ) | (requestCode==CONTINUE_TEST_REQUEST)  ){
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, "You are done with this test", Toast.LENGTH_SHORT).show();
+                this.index = 0;
+            }
+            else if (resultCode == RESULT_CANCELED) {
+                if (data==null)
+                    Toast.makeText(this, "There might have been a problem", Toast.LENGTH_SHORT).show();
+                else {
+                    this.word_list = data.getParcelableArrayListExtra("word list");
+                    this.index = data.getIntExtra("final index", 0);
+                    this.test_type = data.getStringExtra("test type");
+                    Toast.makeText(this, "Saved your ongoing progress", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+    }
 
 }

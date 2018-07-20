@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".WordActivity"
     android:orientation="vertical">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -97,12 +97,23 @@
     <include layout="@layout/verb"/>
 
     <Button
+        android:id="@+id/add_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:onClick="pushWord"
         android:text="@string/adding"
         android:theme="@style/AppTheme.Buttons" />
+
+    <Button
+        android:id="@+id/delete_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:onClick="deleteWord"
+        android:text="@string/deleteWord"
+        android:theme="@style/AppTheme.Buttons"
+        android:visibility="invisible" />
 
 
 </LinearLayout>

@@ -1,5 +1,9 @@
 package com.jmhaussaire.me.wortschatz;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+
 import java.lang.reflect.Array;
 import java.text.CollationElementIterator;
 import java.text.Collator;
@@ -12,14 +16,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+@Entity
 public class Dictionary {
     // Attributes
     private ArrayList<Word> word_list;
 
     private String learning_language;
     private String known_language;
+    @PrimaryKey
     private String name;
-
+    @Ignore //I dont need to save this info. I can always reset it to whatever. Mainly to look at what "Room" has to offer
     private String display_sort; //AZ_theme, AZ_version, Date
 
     // Constructor
@@ -32,6 +38,14 @@ public class Dictionary {
 
         word_list = new ArrayList<Word>();
 
+    }
+    public Dictionary(){
+        //Default is German-English dictionary
+        this.learning_language = "German";
+        this.known_language = "English";
+        this.name = "Default";
+        this.display_sort = "AZ_theme";
+        word_list = new ArrayList<Word>();
     }
 
     // Accessors
@@ -78,7 +92,7 @@ public class Dictionary {
     }
 
     // All the sorting methods.
-    // sorting_type = Date, alpha, order, randoms,
+    // sorting_type = Date, AZ_*, order, FIFO, LIFO, smart, pure
     // test_type = version vs theme
     // Date (FIFO/LIFO) - for testing and display
     // Version (AZ) - for display
@@ -99,8 +113,8 @@ public class Dictionary {
 
     public void sortWordList(String sorting_type) {
         switch (sorting_type){
-            case "Date":
-                sortWordListDate();
+            case "Date": case "FIFO": case "LIFO":
+                sortWordListDate(sorting_type);
                 break;
             case "AZ_theme":
                 sortWordListTheme();
@@ -108,6 +122,10 @@ public class Dictionary {
             case "AZ_version":
                 sortWordListVersion();
                 break;
+            default: //smart, pure; Since it's ransomly picked after, it doesn't matter how it is ordered.
+                sortWordList();
+                break;
+
         }
     }
 
@@ -123,7 +141,7 @@ public class Dictionary {
         };
 
         Collections.sort(this.word_list,test);
-        sorting_type = "AZ_theme";
+        display_sort = "AZ_theme";
     }
 
     public void sortWordListVersion() {
@@ -138,7 +156,7 @@ public class Dictionary {
         };
 
         Collections.sort(this.word_list,test);
-        sorting_type = "AZ_version";
+        display_sort = "AZ_version";
     }
 
     public void sortWordListDate(String sorting_type) {
@@ -146,10 +164,6 @@ public class Dictionary {
         Comparator<Word> test = new Comparator<Word>() {
             @Override
             public int compare(Word w1, Word w2) {
-//                System.out.println("here");
-//                System.out.println(w1.getEntry_date());
-//                System.out.println(w2.getEntry_date());
-//                System.out.println(w1.getEntry_date().compareTo(w2.getEntry_date()));
                 return w1.getEntry_date().compareTo(w2.getEntry_date());
             }
         };
@@ -158,12 +172,12 @@ public class Dictionary {
             Collections.sort(this.word_list,test);
         else if (sorting_type=="LIFO")
             Collections.sort(this.word_list,Collections.reverseOrder(test));
-        else if (sorting_type=="Date")
-            this.sorting_type = "Date";
+        else if (sorting_type=="Date") {
+            Collections.sort(this.word_list, test);
+            this.display_sort = "Date";
+        }
     }
 
-
-    // CHECK WHAT FINAL MEANS !
     public ArrayList<Word> sortWordListOrder(final String test_type) {
         // I want to order
         // - First last_result = False

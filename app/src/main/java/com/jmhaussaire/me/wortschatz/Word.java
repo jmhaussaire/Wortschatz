@@ -1,5 +1,6 @@
 package com.jmhaussaire.me.wortschatz;
 
+import android.arch.persistence.room.TypeConverter;
 import android.icu.util.DateInterval;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -11,21 +12,21 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 
-public class Word implements Parcelable {
 
+public class Word implements Parcelable {
     //Attributes
     protected String theme; //German
     protected String version; //English
     private Date entry_date; // date the word was added. For sorting.
-    // private String word_type; // verb, noun, adj, adv, idiom
+    private String word_type; // Verb, Noun, Adj, Adv, Idiom.
 
     private ArrayList<Integer> test_results_theme;
     private ArrayList<Integer> test_results_version;
-    private Date last_test_date_version; // Date of the last test. For randomizing.
-    private Date last_test_date_theme; // Date of the last test. For randomizing.
+    private Date last_test_date_version; // Date of the last test. For sorting.
+    private Date last_test_date_theme; // Date of the last test. For sorting.
 
-    private double weight_version=1; //Knowing the former attributes, the corresponsing weight
-    private double weight_theme=1; //Knowing the former attributes, the corresponsing weight
+    private double weight_version=1; //Knowing the former attributes, the corresponding weight
+    private double weight_theme=1; //Knowing the former attributes, the corresponding weight
 
     // pluriel, link with verb, adj ..., pret and perfect,
 
@@ -43,12 +44,22 @@ public class Word implements Parcelable {
         }
     };
 
+    // Constructor from Parcel
+    public Word(Parcel in){
+        this.theme = in.readString();
+        this.version = in.readString();
+        this.word_type = in.readString();
+        this.entry_date = new Date();
+        this.last_test_date_theme = new Date(0); // 1970-01-01
+        this.last_test_date_version = new Date(0);// 1970-01-01
+    }
 
 
     // Constructor
-    public Word(String to_learn, String meaning){
+    public Word(String to_learn, String meaning, String word_type){
         this.theme = to_learn;
         this.version = meaning;
+        this.word_type = word_type;
         this.entry_date = new Date();
         this.last_test_date_theme = new Date(0); // 1970-01-01
         this.last_test_date_version = new Date(0);// 1970-01-01
@@ -56,14 +67,21 @@ public class Word implements Parcelable {
         this.test_results_version = new ArrayList<Integer>();
     }
 
-    // Constructor from Parcel
-    public Word(Parcel in){
-        this.theme = in.readString();
-        this.version = in.readString();
-        this.entry_date = new Date();
-        this.last_test_date_theme = new Date(0); // 1970-01-01
-        this.last_test_date_version = new Date(0);// 1970-01-01
+    public Word(){
+        this("","","");
     }
+
+    public Word(Word word){
+        this.theme = word.getTheme();
+        this.version = word.getVersion();
+        this.word_type = word.getword_type();
+        this.entry_date = word.getEntry_date();
+        this.last_test_date_theme = word.getLast_test_date_theme();
+        this.last_test_date_version = word.getLast_test_date_version();
+        this.test_results_theme = word.getTest_results_theme();
+        this.test_results_version = word.getTest_results_version();
+    }
+
 
 
 
@@ -80,6 +98,7 @@ public class Word implements Parcelable {
     public String printVersion() {
         return this.version;
     }
+    public String getword_type() {return this.word_type;}
     public Date getEntry_date() {
         return entry_date;
     }
@@ -148,7 +167,7 @@ public class Word implements Parcelable {
             return new ArrayList<>();
         }
     }
-    public void appendTest_results(int result, String type){
+    public void appendTest_results(Integer result, String type){
         if (type == "theme"){
             this.test_results_theme.add(result);
         }
@@ -161,6 +180,7 @@ public class Word implements Parcelable {
         }
     }
 
+
         // Methods for Parcelable
     @Override
     public int describeContents() {
@@ -171,6 +191,7 @@ public class Word implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(theme);
         dest.writeString(version);
+        dest.writeString(word_type);
     }
 
 
@@ -224,4 +245,9 @@ public class Word implements Parcelable {
         }
         return weight;
     }
+
+
+
+
+
 }

@@ -1,5 +1,6 @@
 package com.jmhaussaire.me.wortschatz;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -8,9 +9,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -37,6 +40,10 @@ public class VocabActivity extends AppCompatActivity {
         tb = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(tb);
 
+        AppDataBase database = Room.databaseBuilder(this, AppDataBase.class, "dico")
+                .allowMainThreadQueries()   //Allows room to do operation on main thread
+                .build();
+
 
         //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         //fab.setOnClickListener(switch_panel);
@@ -61,11 +68,18 @@ public class VocabActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle(dic.getName());
 
-//        la = new SimpleAdapter(this, dic.getHashMap(), R.layout.list_item , new String[]{"theme", "version"},
-//                new int[]{R.id.text1, R.id.text2});
-//
-//        theme_list.setAdapter(la);
         displayList();
+        this.theme_list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                //Toast.makeText(getApplicationContext(),"Im in",Toast.LENGTH_LONG).show();
+                Word w = dic.getWord_list().get(position);
+                //Toast.makeText(getApplicationContext(),w.getword_type(),Toast.LENGTH_LONG).show();
+                Intent wordActivity = new Intent(VocabActivity.this, WordActivity.class);
+                wordActivity.putExtra("word to display", w);
+                startActivity(wordActivity);
+                return false;
+                }});
     }
 
     public void displayList(){
@@ -91,7 +105,7 @@ public class VocabActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.sortDate)
-            dic.sortWordListDate();
+            dic.sortWordListDate("Date");
 
         if (id == R.id.sortTheme)
             dic.sortWordListTheme();
@@ -123,7 +137,5 @@ public class VocabActivity extends AppCompatActivity {
             }
         }
     }
-
-
 
 }

@@ -9,7 +9,7 @@ public class Noun extends Word {
     private String feminine; //for the feminine form. For example, der Anwalt, die Anwältin
 
     public Noun(String to_learn, String meaning, String plural) {
-        super(to_learn,meaning);
+        super(to_learn,meaning,"Noun");
 
         String to_learn_word = to_learn;
 

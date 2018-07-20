@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="reveal"
-        android:text="Show answerr" />
+        android:text="Show answer" />
 
     <TextView
         android:id="@+id/answer"

@@ -17,4 +17,5 @@
     <string name="perfekt">Perfekt</string>
     <string name="version">Version</string>
     <string name="theme">Theme</string>
+    <string name="deleteWord">Delete Word</string>
 </resources>
