@@ -21,8 +21,8 @@ public interface WordDAO {
     public void delete(Word... word);
 
     @Query("SELECT * FROM Word")
-    public ArrayList<Word> getWords();
+    public List<Word> getWords();
 
     @Query("SELECT * FROM Word WHERE word_id = :id")
-    public Dictionary getWordWithId(String id);
+    public Word getWordWithId(String id);
 }

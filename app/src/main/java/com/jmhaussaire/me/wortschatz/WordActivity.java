@@ -89,7 +89,7 @@ public class WordActivity extends AppCompatActivity {
 
             theme_word.setText(word.printTheme());
             version_word.setText(word.printVersion());
-            switch (word.getword_type()) {
+            switch (word.getWord_type()) {
                 case "Noun":
                     word_type.check(R.id.noun_button);
 //                    Noun noun = (Noun) word;
@@ -153,7 +153,8 @@ public class WordActivity extends AppCompatActivity {
         }
 
         Intent result = new Intent();
-        result.putExtra("this is the word", to_add);
+        //result.putExtra("this is the word", to_add);
+        //TODO, but maybe database insert should word out
         setResult(RESULT_OK, result);
         finish();
     }

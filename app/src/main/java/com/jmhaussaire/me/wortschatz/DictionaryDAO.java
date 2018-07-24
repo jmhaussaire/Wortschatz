@@ -20,8 +20,8 @@ public interface DictionaryDAO {
     @Delete
     public void delete(Dictionary dic);
 
-    @Query("SELECT * FROM Dictionary")
-    public ArrayList<Dictionary> getDics();
+//    @Query("SELECT * FROM Dictionary")
+//    public ArrayList<Dictionary> getDics();
 
     @Query("SELECT * FROM Dictionary WHERE name = :name")
     public Dictionary getDicWithId(String name);

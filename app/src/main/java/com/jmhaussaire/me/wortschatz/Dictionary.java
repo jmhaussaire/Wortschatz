@@ -3,6 +3,7 @@ package com.jmhaussaire.me.wortschatz;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import java.lang.reflect.Array;
 import java.text.CollationElementIterator;
@@ -19,11 +20,14 @@ import java.util.Locale;
 @Entity
 public class Dictionary {
     // Attributes
+    @Ignore
     private ArrayList<Word> word_list;
-
+    @Ignore
     private String learning_language;
+    @Ignore
     private String known_language;
     @PrimaryKey
+    @NonNull
     private String name;
     @Ignore //I dont need to save this info. I can always reset it to whatever. Mainly to look at what "Room" has to offer
     private String display_sort; //AZ_theme, AZ_version, Date
@@ -52,18 +56,16 @@ public class Dictionary {
     public String getKnown_language() {
         return known_language;
     }
-
     public String getName() {
         return name;
     }
-
     public ArrayList<Word> getWord_list() {
         return word_list;
     }
-
     public String getLearning_language() {
         return learning_language;
     }
+    public void setName(String name){this.name = name;}
 
     // Methods
     public void addWord(Word word){

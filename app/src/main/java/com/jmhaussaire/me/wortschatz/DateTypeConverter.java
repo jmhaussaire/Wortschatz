@@ -28,10 +28,15 @@ public class DateTypeConverter {
 
     @TypeConverter
     public ArrayList<Integer>convertStringToResults(String results) {
-        String[] temp = results.split(" ");
         ArrayList<Integer> to_return = new ArrayList<Integer>();
-        for (int i = 0; i< temp.length; i++){
-            to_return.set(i,Integer.parseInt(temp[i]));
+        if (results.length()>0) {
+            String[] temp = results.split(" ");
+
+            for (int i = 0; i < temp.length; i++) {
+                System.out.println(temp[i]);
+                System.out.println(Integer.parseInt(temp[i]));
+                to_return.add(Integer.parseInt(temp[i]));
+            }
         }
         return to_return;
     }

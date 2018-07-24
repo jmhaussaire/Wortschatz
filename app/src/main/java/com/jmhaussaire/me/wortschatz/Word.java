@@ -1,11 +1,13 @@
 package com.jmhaussaire.me.wortschatz;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverter;
 import android.icu.util.DateInterval;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import java.time.Duration;
 import java.time.Period;
@@ -15,11 +17,12 @@ import java.util.Comparator;
 import java.util.Date;
 
 @Entity
-public class Word implements Parcelable {
+public class Word { //implements Parcelable {
     public static int WORD_COUNT =0; // Count instances to set the id
 
     //Attributes
     @PrimaryKey
+    @NonNull
     protected int word_id; // Could be useful
     protected String theme; //German
     protected String version; //English
@@ -31,7 +34,9 @@ public class Word implements Parcelable {
     private Date last_test_date_version; // Date of the last test. For sorting.
     private Date last_test_date_theme; // Date of the last test. For sorting.
 
+    @Ignore
     private double weight_version=1; //Knowing the former attributes, the corresponding weight
+    @Ignore
     private double weight_theme=1; //Knowing the former attributes, the corresponding weight
 
     // pluriel, link with verb, adj ..., pret and perfect,
@@ -39,26 +44,31 @@ public class Word implements Parcelable {
 
 
     // Needed to make it parcelable
-    public static final Parcelable.Creator<Word> CREATOR = new Parcelable.Creator<Word>() {
-        @Override
-        public Word createFromParcel(Parcel source) {
-            return new Word(source);
-        }
-        @Override
-        public Word[] newArray(int size) {
-            return new Word[size];
-        }
-    };
+//    public static final Parcelable.Creator<Word> CREATOR = new Parcelable.Creator<Word>() {
+//        @Override
+//        public Word createFromParcel(Parcel source) {
+//            return new Word(source);
+//        }
+//        @Override
+//        public Word[] newArray(int size) {
+//            return new Word[size];
+//        }
+//    };
 
     // Constructor from Parcel
-    public Word(Parcel in){
-        this.theme = in.readString();
-        this.version = in.readString();
-        this.word_type = in.readString();
-        this.entry_date = new Date();
-        this.last_test_date_theme = new Date(0); // 1970-01-01
-        this.last_test_date_version = new Date(0);// 1970-01-01
-    }
+//    public Word(Parcel in){
+//        this(in.readString(),in.readString(),in.readString());
+////        this.word_id = WORD_COUNT;
+////        WORD_COUNT++;
+////        this.theme = in.readString();
+////        this.version = in.readString();
+////        this.word_type = in.readString();
+////        this.entry_date = new Date();
+////        this.last_test_date_theme = new Date(0); // 1970-01-01
+////        this.last_test_date_version = new Date(0);// 1970-01-01
+////        this.test_results_theme = new ArrayList<Integer>();
+////        this.test_results_version = new ArrayList<Integer>();
+//    }
 
 
     // Constructor
@@ -80,9 +90,10 @@ public class Word implements Parcelable {
     }
 
     public Word(Word word){
+        this.word_id = word.getWord_id();
         this.theme = word.getTheme();
         this.version = word.getVersion();
-        this.word_type = word.getword_type();
+        this.word_type = word.getWord_type();
         this.entry_date = word.getEntry_date();
         this.last_test_date_theme = word.getLast_test_date_theme();
         this.last_test_date_version = word.getLast_test_date_version();
@@ -94,26 +105,44 @@ public class Word implements Parcelable {
 
 
     // Getters/Setters
+
+    @NonNull
+    public int getWord_id() {
+        return word_id;
+    }
+    public void setWord_id(int id) {
+        this.word_id = id;
+    }
     public String getTheme() {
         return this.theme;
     }
+    public void setTheme(String theme) {this.theme = theme;}
     public String printTheme(){
         return this.theme;
     }
     public String getVersion() {
         return this.version;
     }
+    public void setVersion(String version) {this.version= version;}
     public String printVersion() {
         return this.version;
     }
-    public String getword_type() {return this.word_type;}
+    public String getWord_type() {return this.word_type;}
+    public void setWord_type(String type) {this.word_type=type;}
     public Date getEntry_date() {
         return entry_date;
     }
+    public void setEntry_date(Date date) {this.entry_date=date;};
     public Date getLast_test_date_version() {
         return last_test_date_version;
     }
+    public void setLast_test_date_version(Date date) {
+        this.last_test_date_version=date;
+    }
     public Date getLast_test_date_theme() { return last_test_date_theme;  }
+    public void setLast_test_date_theme(Date date) {
+        this.last_test_date_theme=date;
+    }
     public Date getLast_test_date(String type){
         if (type == "theme"){
             return getLast_test_date_theme();
@@ -160,8 +189,14 @@ public class Word implements Parcelable {
     public ArrayList<Integer> getTest_results_theme() {
         return test_results_theme;
     }
+    public void setTest_results_theme(ArrayList<Integer> res) {
+        this.test_results_theme=res;
+    }
     public ArrayList<Integer> getTest_results_version() {
         return test_results_version;
+    }
+    public void setTest_results_version(ArrayList<Integer> res) {
+        this.test_results_version=res;
     }
     public ArrayList<Integer> getTest_results(String type) {
         if (type == "theme"){
@@ -189,18 +224,18 @@ public class Word implements Parcelable {
     }
 
 
-        // Methods for Parcelable
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(theme);
-        dest.writeString(version);
-        dest.writeString(word_type);
-    }
+//    // Methods for Parcelable
+//    @Override
+//    public int describeContents() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public void writeToParcel(Parcel dest, int flags) {
+//        dest.writeString(theme);
+//        dest.writeString(version);
+//        dest.writeString(word_type);
+//    }
 
 
 

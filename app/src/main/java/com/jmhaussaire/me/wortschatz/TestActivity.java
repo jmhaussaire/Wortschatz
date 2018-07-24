@@ -29,7 +29,9 @@ public class TestActivity extends AppCompatActivity {
         Intent intent = getIntent(); //?
 
         //this.current_word = intent.getParcelableExtra("word to test");
-        this.word_list = intent.getParcelableArrayListExtra("word list");
+        //this.word_list = intent.getParcelableArrayListExtra("word list");
+        // TODO
+        this.word_list = new ArrayList<Word>();
         this.test_type = intent.getStringExtra("test type");
         this.current_index = intent.getIntExtra("index",0);
 

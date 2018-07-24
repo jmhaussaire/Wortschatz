@@ -149,10 +149,10 @@ public class MainTestActivity extends AppCompatActivity {
                 if (data==null)
                     Toast.makeText(this, "There might have been a problem", Toast.LENGTH_SHORT).show();
                 else {
-                    this.word_list = data.getParcelableArrayListExtra("word list");
+                    //this.word_list = data.getParcelableArrayListExtra("word list");
                     this.index = data.getIntExtra("final index", 0);
                     this.test_type = data.getStringExtra("test type");
-                    Toast.makeText(this, "Saved your ongoing progress", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Saved your ongoing progress. TODO", Toast.LENGTH_SHORT).show();
                 }
             }
         }

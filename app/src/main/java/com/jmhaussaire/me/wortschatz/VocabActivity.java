@@ -63,14 +63,21 @@ public class VocabActivity extends AppCompatActivity {
                 .allowMainThreadQueries()   //Allows room to do operation on main thread
                 .build();
 
+        System.out.println("wtfffff");
         DAO = database.getWordDAO();
+        System.out.println("oups");
+        //this.word_list= DAO.getWords();
         this.word_list= DAO.getWords();
+        System.out.println("oups");
         if (word_list.size()==0) {
             Toast.makeText(getApplicationContext(),"This is just for the first time",Toast.LENGTH_LONG).show();
-            Word word_1 = new Noun("die Katze", "chat");
-            Word word_2 = new Noun("der Hund", "chien");
-            Word word_3 = new Noun("das Ding", "truc");
+            Word word_1 = new Word("die Katze", "chat","Noun");
+            Word word_2 = new Word("der Hund", "chien","Noun");
+            Word word_3 = new Word("das Ding", "truc","Noun");
             DAO.insert(word_1,word_2,word_3);
+            System.out.println("machin");
+            this.word_list = DAO.getWords();
+            System.out.println("ca marche?");
         }
 
         //this.dic = new Dictionary("German","English");
@@ -88,7 +95,8 @@ public class VocabActivity extends AppCompatActivity {
                 Word w = word_list.get(position);
                 //Toast.makeText(getApplicationContext(),w.getword_type(),Toast.LENGTH_LONG).show();
                 Intent wordActivity = new Intent(VocabActivity.this, WordActivity.class);
-                wordActivity.putExtra("word to display", w);
+                //wordActivity.putExtra("word to display", w);
+                wordActivity.putExtra("word to display",w.getWord_id());
                 startActivity(wordActivity);
                 return false;
                 }});
