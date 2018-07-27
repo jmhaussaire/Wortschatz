@@ -1,6 +1,7 @@
 package com.jmhaussaire.me.wortschatz;
 
 import android.app.Activity;
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,49 +19,40 @@ public class TestActivity extends AppCompatActivity {
     String test_type; //version or theme
     Word current_word; //probably needed for saving ?
     int current_index= 0;
-    ArrayList<Word> word_list;
+    int[] word_list;
 
+    WordDAO DAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        Intent intent = getIntent(); //?
+        // I get the Database
+        AppDataBase database = Room.databaseBuilder(this, AppDataBase.class, "dico")
+                .allowMainThreadQueries()   //Allows room to do operation on main thread
+                .build();
+
+        DAO = database.getWordDAO();
+
+        Intent intent = getIntent();
 
         //this.current_word = intent.getParcelableExtra("word to test");
         //this.word_list = intent.getParcelableArrayListExtra("word list");
         // TODO
-        this.word_list = new ArrayList<Word>();
+        this.word_list = intent.getIntArrayExtra("id list");
         this.test_type = intent.getStringExtra("test type");
         this.current_index = intent.getIntExtra("index",0);
 
-
-        this.current_word = word_list.get(current_index);
-
-
+        this.current_word = DAO.getWordWithId(word_list[current_index]);
 
         setTexts();
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-//        Toast.makeText(this, "thats why", Toast.LENGTH_SHORT).show();
-//        Intent returnIntent = new Intent();
-//        returnIntent.putExtra("final word",this.current_word);//this.current_index);
-//        setResult(Activity.RESULT_OK,returnIntent);
-    }
-
-    @Override
     public void onBackPressed() {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("word list",this.word_list);//this.current_index);
+        returnIntent.putExtra("id list",this.word_list);//this.current_index);
         returnIntent.putExtra("final index",this.current_index);
         returnIntent.putExtra("test type",test_type);
         setResult(Activity.RESULT_CANCELED,returnIntent);
@@ -81,26 +73,27 @@ public class TestActivity extends AppCompatActivity {
     protected void setTexts(){
         TextView question = findViewById(R.id.question);
         TextView answer = findViewById(R.id.answer);
-        if (this.test_type=="theme"){
+        if (this.test_type.equals("version")){
             question.setText(current_word.getTheme());
             answer.setText(current_word.getVersion());
         }
-        else {//version
+        else {//theme
             question.setText(current_word.getVersion());
             answer.setText(current_word.getTheme());
         }
     }
 
-    public Word pickWordRandom(){
-        int index= (int) Math.random()*this.word_list.size();
-        return this.word_list.get(index);
+    public int pickWordRandom(){
+        int index= (int) Math.random()*this.word_list.length;
+        return this.word_list[index];
     }
 
-    public Word pickWordRandomSmart(){
+    public int pickWordRandomSmart(){
         ArrayList<Double> weight_list = new ArrayList<>();
         double total_weight=0;
-        for (int i=0; i<word_list.size(); i++) {
-            double word_weight=word_list.get(i).getWeight(this.test_type);
+        for (int i=0; i<word_list.length; i++) {
+            Word word = DAO.getWordWithId(word_list[i]);
+            double word_weight= word.getWeight(this.test_type);
             weight_list.add(word_weight);
             total_weight+=word_weight;
         }
@@ -113,7 +106,7 @@ public class TestActivity extends AppCompatActivity {
             else rand-=weight_list.get(i);
             i++;
         }
-        return word_list.get(index);
+        return word_list[index];
     }
 
     public void reveal(View view) {
@@ -141,14 +134,17 @@ public class TestActivity extends AppCompatActivity {
             current_word.appendTest_results(0,this.test_type);
         }
 
-        this.current_word.setLast_test_date(new Date(),this.test_type);
+        current_word.setLast_test_date(new Date(),this.test_type);
+
+        DAO.update(current_word);
+
         this.current_index++;
-        if (this.current_index>=word_list.size()) {
+        if (this.current_index>=word_list.length) {
             setResult(Activity.RESULT_OK);
             finish();
         }
         else
-            this.current_word= this.word_list.get(this.current_index);
+            this.current_word= DAO.getWordWithId(this.word_list[this.current_index]);
         unreveal();
         setTexts();
     }

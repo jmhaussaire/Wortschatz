@@ -27,7 +27,7 @@ public class DateTypeConverter {
     }
 
     @TypeConverter
-    public ArrayList<Integer>convertStringToResults(String results) {
+    public ArrayList<Integer> convertStringToResults(String results) {
         ArrayList<Integer> to_return = new ArrayList<Integer>();
         if (results.length()>0) {
             String[] temp = results.split(" ");

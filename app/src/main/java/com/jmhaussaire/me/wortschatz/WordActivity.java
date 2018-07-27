@@ -1,5 +1,6 @@
 package com.jmhaussaire.me.wortschatz;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 public class WordActivity extends AppCompatActivity {
     TextView theme_language;
     TextView version_language;
@@ -19,20 +23,20 @@ public class WordActivity extends AppCompatActivity {
     RadioGroup word_type;
     RadioGroup gender;
 
-    Dictionary dic;
+    int word_id = -1;
+
+    WordDAO DAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word);
 
-        this.dic = new Dictionary("German","English");
-
         theme_language = findViewById(R.id.theme_language);
-        theme_language.setText(dic.getLearning_language());
+        theme_language.setText("German"); //TODO languages
 
         version_language = findViewById(R.id.version_language);
-        version_language.setText(dic.getKnown_language());
+        version_language.setText("English"); //TODO languages
 
         word_type = findViewById(R.id.word_type);
         theme_word = findViewById(R.id.theme_word);
@@ -73,10 +77,26 @@ public class WordActivity extends AppCompatActivity {
 
         word_type.setOnCheckedChangeListener(type_listener);
 
+        // Get the database of words
+        AppDataBase database = Room.databaseBuilder(this, AppDataBase.class, "dico")
+                .allowMainThreadQueries()   //Allows room to do operation on main thread
+                .build();
+        DAO = database.getWordDAO();
 
         // Check how I started this activity
         Intent intent = getIntent();
-        Word word = intent.getParcelableExtra("word to display");
+        int id = intent.getIntExtra("word to display",-1);
+        Word word;
+        if (id<0){
+            word=null;
+        }
+        else {
+            word = DAO.getWordWithId(id);
+            word_id = id;
+            if (word==null)
+                System.out.println("houston we got a problem");
+        }
+
         // Either Im creating a new word
         if (word==null){
             word_type.check(R.id.verb_button);
@@ -92,6 +112,7 @@ public class WordActivity extends AppCompatActivity {
             switch (word.getWord_type()) {
                 case "Noun":
                     word_type.check(R.id.noun_button);
+                    //TODO implement word type
 //                    Noun noun = (Noun) word;
 //                    //display_word(word); // To show all the extra information
 //                    theme_word.setText(noun.printTheme());
@@ -109,7 +130,7 @@ public class WordActivity extends AppCompatActivity {
 
         }
 
-
+        //TODO implement word type
         // If it's a noun, need to adapt the gender with the article
         RadioGroup.OnCheckedChangeListener gender_listener = new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -123,44 +144,78 @@ public class WordActivity extends AppCompatActivity {
 
     }
 
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        // Must save the data
-    }
-
-    public void pushWord(View view) {
-        int id = word_type.getCheckedRadioButtonId();
-
+    public Word wordToAdd() {
         String theme = theme_word.getText().toString();
         String version = version_word.getText().toString();
 
-        Word to_add;
-
-        switch (id){
+        //TODO implement word type
+        int button_id = word_type.getCheckedRadioButtonId();
+        String word_type="";
+        switch (button_id){
             case R.id.noun_button:
-                EditText plural = findViewById(R.id.plural);
-                //if (plural.getText().toString()!=""){
-                    to_add= new Noun(theme,version,plural.getText().toString());
-                    break;
-                //}
-            //case verb
-            //case other
-            //case idiom
-            default:
-                to_add = new Word(theme,version,"Verb");
+//                EditText plural = findViewById(R.id.plural);
+//                //if (plural.getText().toString()!=""){
+//                    to_add= new Noun(theme,version,plural.getText().toString());
+//                    break;
+                word_type="Noun";
+                break;
+            case R.id.verb_button:
+                word_type="Verb";
+                break;
+            case R.id.other_button:
+                word_type="Other";
+                break;
+            case R.id.idiom_button:
+                word_type="Idiom";
+                break;
         }
+        Word to_add = new Word(theme, version, word_type);
+        return to_add;
+    }
 
+    public void addNewWord(View view){
+        Word to_add = wordToAdd();
+        DAO.insert(to_add);
+        
         Intent result = new Intent();
         //result.putExtra("this is the word", to_add);
-        //TODO, but maybe database insert should word out
         setResult(RESULT_OK, result);
         finish();
     }
 
+    public void updateWord(View view) {
+        Word old_word = DAO.getWordWithId(this.word_id);
+        Word to_add = wordToAdd();
+
+        // Copy attributes
+        to_add.setWord_id(old_word.getWord_id());
+        to_add.setEntry_date(old_word.getEntry_date());
+        to_add.setTest_results_theme(old_word.getTest_results_theme());
+        to_add.setTest_results_version(old_word.getTest_results_version());
+        to_add.setLast_test_date_version(old_word.getLast_test_date_version());
+        to_add.setLast_test_date_theme(old_word.getLast_test_date_theme());
+
+        Intent result = new Intent();
+        //result.putExtra("this is the word", to_add);
+        DAO.delete(old_word);
+        DAO.insert(to_add);
+        setResult(RESULT_OK, result);
+        finish();
+    }
+
+    public void pushWord(View view) {
+        if (this.word_id==-1) // Create a new word
+            addNewWord(view);
+        else // Update an old word
+            updateWord(view);
+    }
+
     public void deleteWord(View view) {
-        // Need to make this
+        Word word = DAO.getWordWithId(this.word_id);
+        DAO.delete(word);
+        Intent result = new Intent();
+        setResult(RESULT_OK, result);
+        finish();
     }
 
 }

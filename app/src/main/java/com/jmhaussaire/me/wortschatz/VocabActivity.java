@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -63,29 +65,18 @@ public class VocabActivity extends AppCompatActivity {
                 .allowMainThreadQueries()   //Allows room to do operation on main thread
                 .build();
 
-        System.out.println("wtfffff");
         DAO = database.getWordDAO();
-        System.out.println("oups");
-        //this.word_list= DAO.getWords();
         this.word_list= DAO.getWords();
-        System.out.println("oups");
         if (word_list.size()==0) {
             Toast.makeText(getApplicationContext(),"This is just for the first time",Toast.LENGTH_LONG).show();
             Word word_1 = new Word("die Katze", "chat","Noun");
             Word word_2 = new Word("der Hund", "chien","Noun");
             Word word_3 = new Word("das Ding", "truc","Noun");
             DAO.insert(word_1,word_2,word_3);
-            System.out.println("machin");
             this.word_list = DAO.getWords();
-            System.out.println("ca marche?");
         }
 
-        //this.dic = new Dictionary("German","English");
-        //dic.addWord(word_1);
-        //dic.addWord(word_2);
-        //dic.addWord(word_3);
-
-        getSupportActionBar().setTitle("GERMAN");//dic.getName()); //TO CHANGE
+        getSupportActionBar().setTitle("GERMAN");//dic.getName()); //TODO languages
 
         displayList();
         this.theme_list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -97,7 +88,7 @@ public class VocabActivity extends AppCompatActivity {
                 Intent wordActivity = new Intent(VocabActivity.this, WordActivity.class);
                 //wordActivity.putExtra("word to display", w);
                 wordActivity.putExtra("word to display",w.getWord_id());
-                startActivity(wordActivity);
+                startActivityForResult(wordActivity,ADD_WORD_REQUEST);
                 return false;
                 }});
     }
@@ -138,6 +129,7 @@ public class VocabActivity extends AppCompatActivity {
 
     public void add_word(View view) {
         Intent wordActivity = new Intent(VocabActivity.this, WordActivity.class);
+        wordActivity.putExtra("word to display",-1);
         startActivityForResult(wordActivity,ADD_WORD_REQUEST);
     }
 
@@ -145,8 +137,8 @@ public class VocabActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode== ADD_WORD_REQUEST) {
             if (resultCode==RESULT_OK){
-                Word word =data.getParcelableExtra("this is the word");
-                DAO.insert(word);
+                //Word word =data.getParcelableExtra("this is the word");
+                //DAO.insert(word);
                 this.word_list = DAO.getWords();
                 sortWordList();
                 displayList();
@@ -185,7 +177,7 @@ public class VocabActivity extends AppCompatActivity {
     }
 
     public static void sortWordList(List<Word> word_list, String sorting_type, String test_type){
-        if (sorting_type=="order")
+        if (sorting_type.equals("order"))
             sortWordListOrder(word_list,test_type);
         else
             sortWordList(word_list,sorting_type);
@@ -242,11 +234,11 @@ public class VocabActivity extends AppCompatActivity {
             }
         };
 
-        if (sorting_type=="FIFO")
+        if (sorting_type.equals("FIFO"))
             Collections.sort(word_list,test);
-        else if (sorting_type=="LIFO")
+        else if (sorting_type.equals("LIFO"))
             Collections.sort(word_list,Collections.reverseOrder(test));
-        else if (sorting_type=="Date") {
+        else if (sorting_type.equals("Date")) {
             Collections.sort(word_list, test);
         }
     }

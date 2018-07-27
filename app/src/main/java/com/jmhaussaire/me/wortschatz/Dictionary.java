@@ -107,7 +107,7 @@ public class Dictionary {
     }
 
     public void sortWordList(String sorting_type, String test_type){
-        if (sorting_type=="order")
+        if (sorting_type.equals("order"))
             sortWordListOrder(test_type);
         else
             sortWordList(sorting_type);
@@ -170,11 +170,11 @@ public class Dictionary {
             }
         };
 
-        if (sorting_type=="FIFO")
+        if (sorting_type.equals("FIFO"))
             Collections.sort(this.word_list,test);
-        else if (sorting_type=="LIFO")
+        else if (sorting_type.equals("LIFO"))
             Collections.sort(this.word_list,Collections.reverseOrder(test));
-        else if (sorting_type=="Date") {
+        else if (sorting_type.equals("Date")) {
             Collections.sort(this.word_list, test);
             this.display_sort = "Date";
         }

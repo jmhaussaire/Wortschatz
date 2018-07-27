@@ -28,6 +28,7 @@ public class Word { //implements Parcelable {
     protected String version; //English
     private Date entry_date; // date the word was added. For sorting.
     private String word_type; // Verb, Noun, Adj, Adv, Idiom.
+    //TODO implement word type
 
     private ArrayList<Integer> test_results_theme;
     private ArrayList<Integer> test_results_version;
@@ -105,7 +106,6 @@ public class Word { //implements Parcelable {
 
 
     // Getters/Setters
-
     @NonNull
     public int getWord_id() {
         return word_id;
@@ -144,10 +144,10 @@ public class Word { //implements Parcelable {
         this.last_test_date_theme=date;
     }
     public Date getLast_test_date(String type){
-        if (type == "theme"){
+        if (type.equals("theme")){
             return getLast_test_date_theme();
         }
-        else if (type == "version"){
+        else if (type.equals("version")){
             return getLast_test_date_version();
         }
         else {
@@ -156,10 +156,10 @@ public class Word { //implements Parcelable {
         }
     }
     public void setLast_test_date(Date date, String type){
-        if (type == "theme"){
+        if (type.equals("theme")){
             this.last_test_date_theme = date;
         }
-        else if (type == "version"){
+        else if (type.equals("version")){
             this.last_test_date_version = date;
         }
         else {
@@ -175,10 +175,10 @@ public class Word { //implements Parcelable {
         return this.weight_theme;
     }
     public double getWeight(String type) {
-        if (type == "theme"){
+        if (type.equals("theme")){
             return getWeight_theme();
         }
-        else if (type == "version"){
+        else if (type.equals("version")){
             return getWeight_version();
         }
         else {
@@ -199,10 +199,10 @@ public class Word { //implements Parcelable {
         this.test_results_version=res;
     }
     public ArrayList<Integer> getTest_results(String type) {
-        if (type == "theme"){
+        if (type.equals("theme")){
             return getTest_results_theme();
         }
-        else if (type == "version"){
+        else if (type.equals("version")){
             return getTest_results_version();
         }
         else {
@@ -211,10 +211,10 @@ public class Word { //implements Parcelable {
         }
     }
     public void appendTest_results(Integer result, String type){
-        if (type == "theme"){
+        if (type.equals("theme")){
             this.test_results_theme.add(result);
         }
-        else if (type == "version"){
+        else if (type.equals("version")){
             this.test_results_version.add(result);
         }
         else {
