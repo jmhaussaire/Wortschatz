@@ -188,6 +188,7 @@ public class WordActivity extends AppCompatActivity {
         Word to_add = wordToAdd();
 
         // Copy attributes
+        // TODO
         to_add.setWord_id(old_word.getWord_id());
         to_add.setEntry_date(old_word.getEntry_date());
         to_add.setTest_results_theme(old_word.getTest_results_theme());

@@ -34,7 +34,7 @@ public class VocabActivity extends AppCompatActivity {
     //Attributes
     protected ListView theme_list ;
     protected Toolbar tb;
-    protected List<Word> word_list;
+    protected Word[] word_list;
     protected ListAdapter la;
     protected String display_sort = "AZ_theme"; //AZ_theme, AZ_version, Date
     WordDAO DAO;
@@ -67,7 +67,7 @@ public class VocabActivity extends AppCompatActivity {
 
         DAO = database.getWordDAO();
         this.word_list= DAO.getWords();
-        if (word_list.size()==0) {
+        if (word_list.length==0) {
             Toast.makeText(getApplicationContext(),"This is just for the first time",Toast.LENGTH_LONG).show();
             Word word_1 = new Word("die Katze", "chat","Noun");
             Word word_2 = new Word("der Hund", "chien","Noun");
@@ -83,7 +83,7 @@ public class VocabActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 //Toast.makeText(getApplicationContext(),"Im in",Toast.LENGTH_LONG).show();
-                Word w = word_list.get(position);
+                Word w = word_list[position];
                 //Toast.makeText(getApplicationContext(),w.getword_type(),Toast.LENGTH_LONG).show();
                 Intent wordActivity = new Intent(VocabActivity.this, WordActivity.class);
                 //wordActivity.putExtra("word to display", w);
@@ -152,8 +152,8 @@ public class VocabActivity extends AppCompatActivity {
         System.out.println("truc");
         List<HashMap<String, String>> liste = new ArrayList<HashMap<String, String>>();
 
-        for (int i=0; i<this.word_list.size(); i++) {
-            Word word = word_list.get(i);
+        for (int i=0; i<this.word_list.length; i++) {
+            Word word = word_list[i];
             HashMap<String, String> element = new HashMap<String, String>();
             element.put("theme", word.printTheme());
             element.put("version", word.printVersion());
@@ -176,14 +176,14 @@ public class VocabActivity extends AppCompatActivity {
         sortWordList(this.word_list,this.display_sort);
     }
 
-    public static void sortWordList(List<Word> word_list, String sorting_type, String test_type){
+    public static void sortWordList(Word[] word_list, String sorting_type, String test_type){
         if (sorting_type.equals("order"))
             sortWordListOrder(word_list,test_type);
         else
             sortWordList(word_list,sorting_type);
     }
 
-    public static void sortWordList(List<Word> word_list, String sorting_type) {
+    public static void sortWordList(Word[] word_list, String sorting_type) {
         switch (sorting_type){
             case "Date":
             case "FIFO": case "LIFO":
@@ -199,7 +199,7 @@ public class VocabActivity extends AppCompatActivity {
         }
     }
 
-    public static void sortWordListTheme(List<Word> word_list) {
+    public static void sortWordListTheme(Word[] word_list) {
 
         Comparator<Word> test = new Comparator<Word>() {
             @Override
@@ -210,10 +210,10 @@ public class VocabActivity extends AppCompatActivity {
             }
         };
 
-        Collections.sort(word_list,test);
+        Arrays.sort(word_list,test);
     }
 
-    public static void sortWordListVersion(List<Word> word_list) {
+    public static void sortWordListVersion(Word[] word_list) {
         Comparator<Word> test = new Comparator<Word>() {
             @Override
             public int compare(Word w1, Word w2) {
@@ -222,10 +222,10 @@ public class VocabActivity extends AppCompatActivity {
                 return coll.compare(w1.getVersion(),w2.getVersion());
             }
         };
-        Collections.sort(word_list,test);
+        Arrays.sort(word_list,test);
     }
 
-    public static void sortWordListDate(List<Word> word_list, String sorting_type) {
+    public static void sortWordListDate(Word[] word_list, String sorting_type) {
 
         Comparator<Word> test = new Comparator<Word>() {
             @Override
@@ -235,15 +235,15 @@ public class VocabActivity extends AppCompatActivity {
         };
 
         if (sorting_type.equals("FIFO"))
-            Collections.sort(word_list,test);
+            Arrays.sort(word_list,test);
         else if (sorting_type.equals("LIFO"))
-            Collections.sort(word_list,Collections.reverseOrder(test));
+            Arrays.sort(word_list,Collections.reverseOrder(test));
         else if (sorting_type.equals("Date")) {
-            Collections.sort(word_list, test);
+            Arrays.sort(word_list, test);
         }
     }
 
-    public static List<Word> sortWordListOrder(List<Word> word_list,final String test_type) {
+    public static Word[] sortWordListOrder(Word[] word_list,final String test_type) {
         // I want to order
         // - First last_result = False
         // - First the ones that were tested the longest ago (no test is the oldest)
@@ -258,11 +258,11 @@ public class VocabActivity extends AppCompatActivity {
 
                 int testResult1 = -1;
                 if (!w1.getTest_results(test_type).isEmpty()){
-                    testResult1=w1.getTest_results(test_type).get(w1.getTest_results(test_type).size());
+                    testResult1=w1.getTest_results(test_type).get(w1.getTest_results(test_type).size()-1);
                 }
                 int testResult2 = -1;
                 if (!w2.getTest_results(test_type).isEmpty()) {
-                    testResult2 = w2.getTest_results(test_type).get(w2.getTest_results(test_type).size());
+                    testResult2 = w2.getTest_results(test_type).get(w2.getTest_results(test_type).size()-1);
                 }
 
 
@@ -287,7 +287,7 @@ public class VocabActivity extends AppCompatActivity {
             }
         };
 
-        Collections.sort(word_list,test);
+        Arrays.sort(word_list,test);
         return word_list;
         //sorting_type = "Order";
     }

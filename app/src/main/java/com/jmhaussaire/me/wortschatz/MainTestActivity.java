@@ -1,5 +1,7 @@
 package com.jmhaussaire.me.wortschatz;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,13 +18,14 @@ public class MainTestActivity extends AppCompatActivity {
     public final static int CONTINUE_TEST_REQUEST = 1;
     public final static int TEST_WORD_REQUEST = 2;
 
-
-    protected List<Word> word_list;
     protected int[] id_list;
     protected int index = 0;
     protected String test_type;
 
+    protected Word[] word_list;
     WordDAO DAO;
+    TestSaveDAO tsDAO;
+    TestSave save;
 
     //public
 
@@ -31,12 +34,31 @@ public class MainTestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_test);
         this.index = 0;
+        getSave();
     }
+
+    private void getSave(){
+        AppDataBase database = Room.databaseBuilder(this, AppDataBase.class, "testsave")
+                .allowMainThreadQueries()   //Allows room to do operation on main thread
+                .build();
+        this.tsDAO = database.getTestSaveDAO();
+        TestSave[] ts = tsDAO.getSave();
+        if (ts.length==1) {
+            this.save = tsDAO.getSave()[0];
+        }
+        else if (ts.length==0){
+            this.save = null;
+        }
+        else {
+            Toast.makeText(this, "I think I have too many test saved", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     public void goToTest(View view) {
         switch (view.getId()) {
             case R.id.continueTest:
-                if (index==0)
+/*                if (index==0)
                     Toast.makeText(this, "No test to continue", Toast.LENGTH_SHORT).show();
                 else {
                     // TODO Continue test
@@ -45,8 +67,20 @@ public class MainTestActivity extends AppCompatActivity {
                     testActivity.putExtra("test type",test_type);
                     testActivity.putExtra("index",index);
                     startActivityForResult(testActivity,CONTINUE_TEST_REQUEST);
-
+                }*/
+                if (save==null)
+                    Toast.makeText(this, "No test to continue", Toast.LENGTH_SHORT).show();
+                else {
+                    Intent testActivity = new Intent(MainTestActivity.this, TestActivity.class);
+                    this.id_list = save.getId_list();
+                    this.index = save.getIndex();
+                    this.test_type = save.getTest_type();
+                    testActivity.putExtra("id list",id_list);
+                    testActivity.putExtra("test type",test_type);
+                    testActivity.putExtra("index",index);
+                    startActivityForResult(testActivity,CONTINUE_TEST_REQUEST);
                 }
+
                 break;
             case R.id.startNewTest:
                 // Need to get the value of the radio buttons to know what kind of test I am running.
@@ -89,21 +123,6 @@ public class MainTestActivity extends AppCompatActivity {
         //test_type : version or theme
         //sort_type : LIFO; FIFO; random; order ...
 
-        // I have a dictionary.
-        //////////////////////
-        // Example
-        /////////////////
-//        Word word_1 = new Noun("die Katze", "chat");
-//        Word word_2 = new Noun("der Hund", "chien");
-//        Word word_3 = new Noun("das Ding", "truc");
-//
-//        Dictionary dic = new Dictionary("German","English");
-//        dic.addWord(word_1);
-//        dic.addWord(word_2);
-//        dic.addWord(word_3);
-        //////////////////////////////////
-
-
         // I get the Database
         AppDataBase database = Room.databaseBuilder(this, AppDataBase.class, "dico")
                 .allowMainThreadQueries()   //Allows room to do operation on main thread
@@ -116,9 +135,9 @@ public class MainTestActivity extends AppCompatActivity {
         this.word_list= DAO.getWords();
         VocabActivity.sortWordList(this.word_list,sort_type,test_type); // TODO check if I need to get it
         // I get the list of indices
-        this.id_list = new int[word_list.size()];
-        for (int i=0; i<word_list.size(); i++)
-            id_list[i] = (this.word_list.get(i).getWord_id());
+        this.id_list = new int[word_list.length];
+        for (int i=0; i<word_list.length; i++)
+            id_list[i] = (this.word_list[i].getWord_id());
 
 
 
@@ -134,7 +153,7 @@ public class MainTestActivity extends AppCompatActivity {
         }
 */
 
-        if (word_list.size()==0){
+        if (word_list.length==0){
             Toast.makeText(this, "Fill in the dictionary first !", Toast.LENGTH_SHORT).show();
         }
         else {
@@ -152,14 +171,26 @@ public class MainTestActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, "You are done with this test", Toast.LENGTH_SHORT).show();
                 this.index = 0;
+                this.tsDAO.delete(this.save);
+                this.save=null;
             }
             else if (resultCode == RESULT_CANCELED) {
                 if (data==null)
                     Toast.makeText(this, "There might have been a problem", Toast.LENGTH_SHORT).show();
                 else {
                     this.id_list = data.getIntArrayExtra("id list");
+                    save.setId_list(this.id_list);
                     this.index = data.getIntExtra("final index", 0);
+                    save.setIndex(this.index);
                     this.test_type = data.getStringExtra("test type");
+                    save.setTest_type(this.test_type);
+
+                    TestSave[] ts = this.tsDAO.getSave();
+                    if (ts.length==0){
+                        tsDAO.insert(this.save);
+                    }
+                    else tsDAO.update(this.save);
+
                     Toast.makeText(this, "Saved your ongoing progress. TODO", Toast.LENGTH_SHORT).show();
                     // TODO
                 }

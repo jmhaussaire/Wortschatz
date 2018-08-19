@@ -22,7 +22,7 @@ public interface WordDAO {
     public void delete(Word... word);
 
     @Query("SELECT * FROM Word")
-    public List<Word> getWords();
+    public Word[] getWords();
 
     @Query("SELECT word_id FROM Word")
     public List<Integer> getIds();
