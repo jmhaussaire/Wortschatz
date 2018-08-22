@@ -100,16 +100,16 @@ public class MainTestActivity extends AppCompatActivity {
                         sort_type = "order";
                         break;
                     case R.id.date_newest:
-                        test_type = "LIFO";
+                        sort_type = "LIFO";
                         break;
                     case R.id.date_oldest:
-                        test_type = "FIFO";
+                        sort_type = "FIFO";
                         break;
                     case R.id.random_smart:
-                        test_type = "smart";
+                        sort_type = "smart";
                         break;
                     case R.id.random_pure:
-                        test_type = "pure";
+                        sort_type = "pure";
                         break;
                 }
 
@@ -171,20 +171,26 @@ public class MainTestActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, "You are done with this test", Toast.LENGTH_SHORT).show();
                 this.index = 0;
-                this.tsDAO.delete(this.save);
-                this.save=null;
+                if (requestCode==CONTINUE_TEST_REQUEST) {
+                    this.tsDAO.delete(this.save);
+                    this.save = null;
+                }
             }
             else if (resultCode == RESULT_CANCELED) {
                 if (data==null)
                     Toast.makeText(this, "There might have been a problem", Toast.LENGTH_SHORT).show();
                 else {
                     this.id_list = data.getIntArrayExtra("id list");
-                    save.setId_list(this.id_list);
                     this.index = data.getIntExtra("final index", 0);
-                    save.setIndex(this.index);
                     this.test_type = data.getStringExtra("test type");
-                    save.setTest_type(this.test_type);
-
+                    if (save==null) {
+                        save = new TestSave(this.id_list, this.index, this.test_type);
+                    }
+                    else {
+                        save.setId_list(this.id_list);
+                        save.setIndex(this.index);
+                        save.setTest_type(this.test_type);
+                    }
                     TestSave[] ts = this.tsDAO.getSave();
                     if (ts.length==0){
                         tsDAO.insert(this.save);

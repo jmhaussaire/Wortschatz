@@ -18,6 +18,7 @@ import java.util.Date;
 
 @Entity
 public class Word { //implements Parcelable {
+
     public static int WORD_COUNT =0; // Count instances to set the id
 
     //Attributes
@@ -27,8 +28,12 @@ public class Word { //implements Parcelable {
     protected String theme; //German
     protected String version; //English
     private Date entry_date; // date the word was added. For sorting.
-    private String word_type; // Verb, Noun, Adj, Adv, Idiom.
+
     //TODO implement word type
+    private String word_type; // Verb, Noun, Adj, Adv, Idiom.
+    protected String theme_with_article; //TODO Remove
+    protected String article = "";
+
 
     private ArrayList<Integer> test_results_theme;
     private ArrayList<Integer> test_results_version;
@@ -39,7 +44,8 @@ public class Word { //implements Parcelable {
     private double weight_version=1; //Knowing the former attributes, the corresponding weight
     @Ignore
     private double weight_theme=1; //Knowing the former attributes, the corresponding weight
-
+    @Ignore
+    private String[] article_list = {"der","die","das"}; //Could be static
     // pluriel, link with verb, adj ..., pret and perfect,
 
 
@@ -76,7 +82,19 @@ public class Word { //implements Parcelable {
     public Word(String to_learn, String meaning, String word_type){
         this.word_id = WORD_COUNT;
         WORD_COUNT++;
+
         this.theme = to_learn;
+        this.theme_with_article = to_learn;
+        for (int i=0; i<article_list.length; i++) {
+            if (to_learn.contains(article_list[i])) {
+                this.article=article_list[i];
+                this.theme = to_learn.replace(this.article,"");
+                this.theme_with_article = to_learn;
+                break;
+            }
+        }
+
+
         this.version = meaning;
         this.word_type = word_type;
         this.entry_date = new Date();
@@ -93,6 +111,8 @@ public class Word { //implements Parcelable {
     public Word(Word word){
         this.word_id = word.getWord_id();
         this.theme = word.getTheme();
+        this.article = word.getArticle();
+        this.theme_with_article = word.getTheme_with_article();
         this.version = word.getVersion();
         this.word_type = word.getWord_type();
         this.entry_date = word.getEntry_date();
@@ -118,8 +138,12 @@ public class Word { //implements Parcelable {
     }
     public void setTheme(String theme) {this.theme = theme;}
     public String printTheme(){
-        return this.theme;
+        return this.theme_with_article;
     }
+    public String getArticle() {return this.article;}
+    public void setArticle(String article) {this.article = article;}
+    public String getTheme_with_article() {return this.theme_with_article;}
+    public void setTheme_with_article(String theme) {this.theme_with_article=theme;}
     public String getVersion() {
         return this.version;
     }

@@ -74,12 +74,12 @@ public class TestActivity extends AppCompatActivity {
         TextView question = findViewById(R.id.question);
         TextView answer = findViewById(R.id.answer);
         if (this.test_type.equals("version")){
-            question.setText(current_word.getTheme());
+            question.setText(current_word.printTheme());
             answer.setText(current_word.getVersion());
         }
         else {//theme
             question.setText(current_word.getVersion());
-            answer.setText(current_word.getTheme());
+            answer.setText(current_word.printTheme());
         }
     }
 
