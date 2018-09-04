@@ -67,6 +67,7 @@ public class VocabActivity extends AppCompatActivity {
 
         DAO = database.getWordDAO();
         this.word_list= DAO.getWords();
+        Word.WORD_COUNT = word_list.length;
         if (word_list.length==0) {
             Toast.makeText(getApplicationContext(),"This is just for the first time",Toast.LENGTH_LONG).show();
             Word word_1 = new Word("die Katze", "chat","Noun");
@@ -239,7 +240,7 @@ public class VocabActivity extends AppCompatActivity {
         else if (sorting_type.equals("LIFO"))
             Arrays.sort(word_list,Collections.reverseOrder(test));
         else if (sorting_type.equals("Date")) {
-            Arrays.sort(word_list, test);
+            Arrays.sort(word_list, Collections.reverseOrder(test));
         }
     }
 

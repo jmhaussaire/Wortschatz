@@ -175,6 +175,14 @@ public class WordActivity extends AppCompatActivity {
 
     public void addNewWord(View view){
         Word to_add = wordToAdd();
+
+        int id = to_add.getWord_id();
+        Word test = DAO.getWordWithId(id);
+        while (test!=null){
+            id++;
+            test  = DAO.getWordWithId(id);
+        }
+        to_add.setWord_id(id);
         DAO.insert(to_add);
         
         Intent result = new Intent();
