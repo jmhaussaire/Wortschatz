@@ -258,12 +258,20 @@ public class VocabActivity extends AppCompatActivity {
                 Date entryDate2;
 
                 int testResult1 = -1;
+                int testSum1 = 0;
                 if (!w1.getTest_results(test_type).isEmpty()){
                     testResult1=w1.getTest_results(test_type).get(w1.getTest_results(test_type).size()-1);
+                    for (int i=0; i<w1.getTest_results(test_type).size(); i++) {
+                        testSum1 += w1.getTest_results(test_type).get(i);
+                    }
                 }
                 int testResult2 = -1;
+                int testSum2 = 0;
                 if (!w2.getTest_results(test_type).isEmpty()) {
                     testResult2 = w2.getTest_results(test_type).get(w2.getTest_results(test_type).size()-1);
+                    for (int i=0; i<w2.getTest_results(test_type).size(); i++) {
+                        testSum2 += w2.getTest_results(test_type).get(i);
+                    }
                 }
 
 
@@ -274,10 +282,18 @@ public class VocabActivity extends AppCompatActivity {
 
 
                 if (testResult1==testResult2){
-                    if (testDate1.equals(testDate2))
-                        return entryDate2.compareTo(entryDate1);
-                    else
-                        return testDate1.compareTo(testDate2);
+                    if (testSum1==testSum2) {
+                        if (testDate1.equals(testDate2))
+                            return entryDate2.compareTo(entryDate1);
+                        else
+                            return testDate1.compareTo(testDate2);
+                    }
+                    else {
+                        if (testSum1<testSum2)
+                            return -1;
+                        else
+                            return 1;
+                    }
                 }
                 else {
                     if (testResult1<testResult2)

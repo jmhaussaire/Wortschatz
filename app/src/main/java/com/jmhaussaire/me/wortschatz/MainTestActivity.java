@@ -71,6 +71,7 @@ public class MainTestActivity extends AppCompatActivity {
                 if (save==null)
                     Toast.makeText(this, "No test to continue", Toast.LENGTH_SHORT).show();
                 else {
+                    Toast.makeText(this, "So far so good", Toast.LENGTH_SHORT).show();
                     Intent testActivity = new Intent(MainTestActivity.this, TestActivity.class);
                     this.id_list = save.getId_list();
                     this.index = save.getIndex();
