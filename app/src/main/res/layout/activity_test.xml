@@ -11,7 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="TextView" />
+        android:text="TextView"
+        android:theme="@style/AppTheme.WordText"
+        />
 
     <Button
         android:id="@+id/showanswer"
@@ -26,7 +28,9 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="TextView"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        android:theme="@style/AppTheme.WordText"
+        />
 
     <LinearLayout
         android:id="@+id/result"
@@ -69,5 +73,14 @@
             app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/edit_word"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show answer"
+        android:clickable="true"
+        android:onClick="goToWord"
+        />
 
 </LinearLayout>

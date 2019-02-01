@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
+import static com.jmhaussaire.me.wortschatz.VocabActivity.ADD_WORD_REQUEST;
+
 public class TestActivity extends AppCompatActivity {
     String test_type; //version or theme
     Word current_word; //probably needed for saving ?
@@ -147,5 +149,12 @@ public class TestActivity extends AppCompatActivity {
             this.current_word= DAO.getWordWithId(this.word_list[this.current_index]);
         unreveal();
         setTexts();
+    }
+
+    public void goToWord(View view) {
+        Intent wordActivity = new Intent(TestActivity.this, WordActivity.class);
+        //wordActivity.putExtra("word to display", w);
+        wordActivity.putExtra("word to display",current_word.getWord_id());
+        startActivityForResult(wordActivity,ADD_WORD_REQUEST);
     }
 }

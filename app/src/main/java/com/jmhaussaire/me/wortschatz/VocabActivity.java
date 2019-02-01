@@ -265,6 +265,7 @@ public class VocabActivity extends AppCompatActivity {
                         testSum1 += w1.getTest_results(test_type).get(i);
                     }
                 }
+                testSum1 = Math.max(testSum1,5);
                 int testResult2 = -1;
                 int testSum2 = 0;
                 if (!w2.getTest_results(test_type).isEmpty()) {
@@ -273,7 +274,7 @@ public class VocabActivity extends AppCompatActivity {
                         testSum2 += w2.getTest_results(test_type).get(i);
                     }
                 }
-
+                testSum2= Math.max(testSum2,5);
 
                 testDate1= w1.getLast_test_date(test_type);
                 testDate2 = w2.getLast_test_date(test_type);
